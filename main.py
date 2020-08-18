@@ -12,6 +12,7 @@ class StockRepository:
         self.name = name
         self.ticker = yf.Ticker(self.name)
         self.cache_file_path = os.path.join(DATA_DIR, self.name)
+        self.raw_info = self.info()
 
     def history(self):
         if os.path.exists(self.cache_file_path):
@@ -21,8 +22,20 @@ class StockRepository:
             df.to_csv(self.cache_file_path)
         return df
 
+    def info(self):
+        return self.ticker.info
+
+    @property
+    def quote_type(self):
+        return self.raw_info['quoteType']
+
     def __str__(self):
         return 'stock: {}'.format(self.name)
 
+
+class Calculator:
+    def expected_return(self, future, current):
+        return (future - current) / current
+
 qqq = StockRepository('QQQ')
-print(qqq)
+print(qqq.quote_type)
