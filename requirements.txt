@@ -4,4 +4,4 @@ pandas==1.3.4
 rich==10.12.0
 yfinance==0.1.64
 requests
-ipdb
+beautifulsoup4
