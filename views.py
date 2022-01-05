@@ -36,8 +36,15 @@ class TerminalView():
 
     def display(self, data):
         console = Console()
-        self.table.add_column("Name", style="dim", width=12)
-        self.table.add_column("Price")
+        self.table.add_column('Ticker', style='dim', width=12)
+        self.table.add_column('Current Price')
+        self.table.add_column('My guess price')
+        self.table.add_column('Analyst price')
+        self.table.add_column('Analyst Percent')
+        self.table.add_column('Buy/Outperform/Hold/Underperform/Sell')
+        self.table.add_column('Current Analyst Resolution')  #e.g. buy/hold/sell?
+        self.table.add_column('Analyst Resolution 6m')
+        self.table.add_column('Analyst Resolution 1y')
         sdata = list(map(str, data))
         self.table.add_row(sdata[0], sdata[1])
         console.print(self.table)
