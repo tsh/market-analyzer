@@ -5,3 +5,4 @@ rich==10.12.0
 yfinance==0.1.64
 requests
 beautifulsoup4
+plotext
