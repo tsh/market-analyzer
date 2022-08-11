@@ -5,13 +5,13 @@ from rich.console import Console
 from rich.table import Table
 
 
-class GUIView():
+class GUI():
     def display(self, stock):
         fig, ax = plt.subplots(figsize=(10, 10))
         ax.plot(stock.history()['Date'], stock.history()['Close'])
         plt.show()
 
-class TerminalView():
+class TUI():
     def __init__(self):
         self.table = Table(show_header=True, header_style="bold magenta")
         # self.table.add_column("Date", style="dim", width=12)
@@ -34,7 +34,7 @@ class TerminalView():
         #     "[bold]$1,332,539,889[/bold]",
         # )
 
-    def display(self, data):
+    def display_table(self, data):
         console = Console()
         self.table.add_column('Ticker', style='dim', width=12)
         self.table.add_column('Current Price')
@@ -48,6 +48,9 @@ class TerminalView():
         sdata = list(map(str, data))
         self.table.add_row(sdata[0], sdata[1])
         console.print(self.table)
+
+    def display_graph(self, data):
+        pass
 
 
 
