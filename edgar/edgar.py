@@ -1,3 +1,5 @@
+from enum import Enum
+
 import requests
 import pandas as pd
 import xml.etree.ElementTree as ET
@@ -70,6 +72,31 @@ class DailyArchive:
         data = resp.content
         return data
 
+
+class Relationship(Enum):
+    DIRECTOR = 'director'
+    OFFICER = 'officer'
+    TEN_PERCENT_OWNER = 'ten_percent_owner'
+    OTHER = 'other'
+
+class ParsingError(ValueError):
+    pass
+
+class Form4:
+    def __init__(self, xml_data):
+        from bs4 import BeautifulSoup
+        self.soup = BeautifulSoup(xml_data, features='xml')
+
+    def reporting_owner_relationship(self) -> Relationship:
+        relationship = self.soup.find('reportingOwnerRelationship')
+        for tag, rel in zip(['isDirector', 'isOfficer', 'isTenPercentOwner', 'isOther'],
+                            [Relationship.DIRECTOR, Relationship.OFFICER, Relationship.TEN_PERCENT_OWNER, Relationship.OTHER]):
+            if relationship.find(tag).get_text() == '1':
+                return rel
+        else:
+            raise ParsingError('Relationship for the form can not be determined')
+
+
 if __name__ == '__main__':
     url = 'https://www.sec.gov/cgi-bin/browse-edgar'
     params = {
@@ -105,4 +132,6 @@ if __name__ == '__main__':
         r = requests.get('https://www.sec.gov' + report_link, headers=headers)
         r.raise_for_status()
 
-
+    f4 = Form4(r.content)
+    print(r.content)
+    print(f4.reporting_owner_relationship())
