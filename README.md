@@ -7,9 +7,11 @@
 
 # Parse biot
 
-# Graph test
-<img src='https://g.gravizo.com/svg?
- digraph G {
+# Graph test    
+
+
+
+<img src='https://g.gravizo.com/svg?digraph G {
    main -> parse -> execute;
    main -> init;
    main -> cleanup;
