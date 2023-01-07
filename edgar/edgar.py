@@ -24,13 +24,19 @@ class Agent:
 
 headers = {'User-Agent': 'Market-Analyzer', 'Accept': 'application/json'}
 
-class Recent:
+class RecentSubmissionParser:
     """
     Latest:
     https://www.sec.gov/cgi-bin/browse-edgar?action=getcurrent&datea=&dateb=&company=&type=4&SIC=&State=&Country=&CIK=&owner=include&accno=&start=0&count=100
     or archive https://www.sec.gov/Archives/edgar/Feed/2022/QTR3/
     RSS: updated every ten minutes Monday through Friday, 6am – 10pm EST
     """
+    def __init__(self, atom_data):
+        self.raw_data = atom_data
+        self.data = feedparser.parse(self.raw_data)
+
+
+class RecentSubmissions:
     @classmethod
     def get_recent(cls):
         url = 'https://www.sec.gov/cgi-bin/browse-edgar'
@@ -46,10 +52,6 @@ class Recent:
         r.raise_for_status()
         import feedparser
         feed = feedparser.parse(r.content)
-        print(feed)
-
-    def extract_data(self, document):
-        pass
 
 
 class DailyArchive:
