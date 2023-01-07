@@ -1,3 +1,4 @@
+import datetime
 import os
 from os.path import dirname
 import unittest
@@ -18,6 +19,10 @@ class TestParseRecentSubmissions(unittest.TestCase):
             self.data = f.read()
         self.parser = RecentSubmissionParser(self.data)
 
-    def test_(self):
-        pass
+    def test_general(self):
+        assert self.parser.time.date() == datetime.date(2023, 1, 7)
+        assert len(self.parser.entries) == 10
+
+    def test_record(self):
+        assert 'Name1 lastname' in self.parser.entries[0]['title']
 

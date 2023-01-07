@@ -1,7 +1,10 @@
+from datetime import datetime
 from enum import Enum
 
 import requests
 import pandas as pd
+
+import feedparser
 import xml.etree.ElementTree as ET
 
 
@@ -34,6 +37,19 @@ class RecentSubmissionParser:
     def __init__(self, atom_data):
         self.raw_data = atom_data
         self.data = feedparser.parse(self.raw_data)
+
+    @property
+    def time(self):
+        return datetime.fromisoformat(self.data.feed.updated)
+
+    @property
+    def entries(self) -> []:
+        entries = []
+        for entree in self.data.entries:
+            entries.append({
+                'title': entree['title']
+            })
+        return entries
 
 
 class RecentSubmissions:
