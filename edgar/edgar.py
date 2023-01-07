@@ -25,15 +25,8 @@ class Agent:
     Accept-Encoding: gzip, deflate"""
 
 
-headers = {'User-Agent': 'Market-Analyzer', 'Accept': 'application/json'}
 
-class RecentSubmissionParser:
-    """
-    Latest:
-    https://www.sec.gov/cgi-bin/browse-edgar?action=getcurrent&datea=&dateb=&company=&type=4&SIC=&State=&Country=&CIK=&owner=include&accno=&start=0&count=100
-    or archive https://www.sec.gov/Archives/edgar/Feed/2022/QTR3/
-    RSS: updated every ten minutes Monday through Friday, 6am – 10pm EST
-    """
+class RecentSubmissionAtomParser:
     def __init__(self, atom_data):
         self.raw_data = atom_data
         self.data = feedparser.parse(self.raw_data)
@@ -52,22 +45,41 @@ class RecentSubmissionParser:
         return entries
 
 
-class RecentSubmissions:
-    @classmethod
-    def get_recent(cls):
+
+
+class RecentSubmissionsAtom:
+    """
+    Latest:
+    https://www.sec.gov/cgi-bin/browse-edgar?action=getcurrent&datea=&dateb=&company=&type=4&SIC=&State=&Country=&CIK=&owner=include&accno=&start=0&count=100
+    or archive https://www.sec.gov/Archives/edgar/Feed/2022/QTR3/
+    RSS: updated every ten minutes Monday through Friday, 6am – 10pm EST
+    """
+    def __init__(self):
+        self.headers = {'User-Agent': 'Market-Analyzer', 'Accept': 'application/json'}
+
+    def get_data(self):
         url = 'https://www.sec.gov/cgi-bin/browse-edgar'
-        params = {
-            'action': 'getcurrent',
-            'type': 4,
-            'owner': 'include',
-            'start': 0,
-            'count': 10,
-            'output': 'atom'
-        }
-        r = requests.get(url, params=params, headers=headers)
-        r.raise_for_status()
-        import feedparser
-        feed = feedparser.parse(r.content)
+        start = 0
+        count = 100
+        while True:
+            params = {
+                'action': 'getcurrent',
+                'type': 4,
+                'owner': 'include',
+                'start': start,
+                'count': count,
+                'output': 'atom'
+            }
+            r = requests.get(url, params=params, headers=self.headers)
+            if r.ok:
+                parser = RecentSubmissionAtomParser(r.content)
+                start += count
+            elif r.status_code == 503:
+                print('No new record found for the date')
+                break
+            else:
+                r.raise_for_status()
+
 
 
 class DailyArchive:

@@ -1,13 +1,9 @@
-from models import Stock
-from views import GUIView, TerminalView
+from models import Stock, YahooProvider
+from views import GUI, TUI
+from edgar.edgar import RecentSubmissionsAtom
 
 from pprint import pprint
 
 
 if __name__ == '__main__':
-    # qqq = Stock('GOOG')
-    # gv = GUIView()
-    # gv.display(qqq)
-    # tv = TerminalView()
-    # tv.display([qqq.name, qqq.ask()])
-
+    RecentSubmissionsAtom().get_data()
