@@ -1,3 +1,6 @@
+import os
+
+import requests
 import matplotlib
 import matplotlib.pyplot as plt
 from matplotlib.dates import datestr2num
@@ -51,6 +54,21 @@ class TUI():
 
     def display_graph(self, data):
         pass
+
+
+class Telegram:
+    def __init__(self):
+        # self.chat = 595574277
+        self.token = os.environ['TG_TOKEN']
+        rsp = requests.get(f'https://api.telegram.org/bot{self.token}/getUpdates')
+        rsp.raise_for_status()
+        for result in rsp.json()['result']:
+            chat_id = result['message']['chat']['id']
+            break
+
+        rsp = requests.get(f'https://api.telegram.org/bot{self.token}/sendMessage', json={'chat_id': '@fnmngr_bottsh',
+                                                                                          'text': 'test2'})
+        rsp.raise_for_status()
 
 
 
