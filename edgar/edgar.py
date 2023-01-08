@@ -45,6 +45,8 @@ class RecentSubmissionAtomParser:
         return entries
 
 
+class BucketRateLimiter:
+    pass
 
 
 class RecentSubmissionsAtom:
@@ -57,7 +59,7 @@ class RecentSubmissionsAtom:
     def __init__(self):
         self.headers = {'User-Agent': 'Market-Analyzer', 'Accept': 'application/json'}
 
-    def get_data(self):
+    def get_data(self) -> [RecentSubmissionAtomParser]:
         url = 'https://www.sec.gov/cgi-bin/browse-edgar'
         start = 0
         count = 100
@@ -73,12 +75,14 @@ class RecentSubmissionsAtom:
             r = requests.get(url, params=params, headers=self.headers)
             if r.ok:
                 parser = RecentSubmissionAtomParser(r.content)
+                yield parser
                 start += count
             elif r.status_code == 503:
                 print('No new record found for the date')
                 break
             else:
                 r.raise_for_status()
+
 
 
 

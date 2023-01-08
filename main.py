@@ -6,4 +6,10 @@ from pprint import pprint
 
 
 if __name__ == '__main__':
-    RecentSubmissionsAtom().get_data()
+    interests = ['tesla', 'scion']
+    for parser in RecentSubmissionsAtom().get_data():
+        for interest in interests:
+            for entree in  parser.entries:
+                if interest.lower() in entree['title'].lower():
+                    print(entree)
+
