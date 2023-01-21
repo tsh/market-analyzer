@@ -1,4 +1,5 @@
 
+![example workflow](https://github.com/tsh/market-analyzer/actions/workflows/python-app.yml/badge.svg)
 # Stock
 - calculate expected value
 - find local max
