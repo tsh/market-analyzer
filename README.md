@@ -1,5 +1,9 @@
 
-![example workflow](https://github.com/tsh/market-analyzer/actions/workflows/python-app.yml/badge.svg)
+![tests](https://github.com/tsh/market-analyzer/actions/workflows/python-app.yml/badge.svg)
+[![Coverage Status](https://coveralls.io/repos/github/tsh/market-analyzer/badge.svg?branch=master)](https://coveralls.io/github/tsh/market-analyzer?branch=master)
+
+YOLO. Donate your money to wall street. Professionally.
+
 # Stock
 - calculate expected value
 - find local max
