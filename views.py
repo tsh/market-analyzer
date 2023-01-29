@@ -62,6 +62,7 @@ class Telegram:
         self.token = os.environ['TG_TOKEN']
         rsp = requests.get(f'https://api.telegram.org/bot{self.token}/getUpdates')
         rsp.raise_for_status()
+        chat_id = None
         for result in rsp.json()['result']:
             chat_id = result['message']['chat']['id']
             break

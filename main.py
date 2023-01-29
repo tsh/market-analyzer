@@ -5,14 +5,21 @@ from edgar.edgar import RecentSubmissionsAtom
 from pprint import pprint
 
 
+class UserInterests:
+    def __init__(self):
+        pass
+
+    def instruments(self) -> list:
+        return ['tesls', 'scion', 'apld']
+
+
 if __name__ == '__main__':
-    interests = ['tesla', 'scion']
+    interests = UserInterests().instruments()
+    submissions = RecentSubmissionsAtom().get_instruments()
     activities = []
-    for parser in RecentSubmissionsAtom().get_data():
-        for interest in interests:
-            for entree in  parser.entries:
-                if interest.lower() in entree['title'].lower():
-                    activities.append(entree['title'])
+    for interest in interests:
+        if interest in submissions:
+            activities.append(interest)
 
     tg = Telegram()
     if activities:
