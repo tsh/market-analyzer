@@ -16,6 +16,7 @@ YOLO. Donate your money to wall street. Professionally.
 
 
 
+## Gravizo
 <img src='https://g.gravizo.com/svg?digraph G {
    main -> parse -> execute;
    main -> printf;
@@ -30,7 +31,7 @@ YOLO. Donate your money to wall street. Professionally.
  }
 '/>
 
-
+## gravizo other 
 ![Alt text](https://g.gravizo.com/svg?
   digraph G {
     size ="4,4";
@@ -40,7 +41,7 @@ YOLO. Donate your money to wall street. Professionally.
   }
 )
 
-
+## mermaid
 ```mermaid
   graph TD;
       A-->B;
