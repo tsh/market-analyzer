@@ -15,33 +15,7 @@ YOLO. Donate your money to wall street. Professionally.
 # Graph test    
 
 
-
-## Gravizo
-<img src='https://g.gravizo.com/svg?digraph G {
-   main -> parse -> execute;
-   main -> printf;
-   execute -> compare;
- }
-'/>
-
-
-<img src='https://g.gravizo.com/svg?
- digraph G {
-   main -> parse -> execute;
- }
-'/>
-
-## gravizo other 
-![Alt text](https://g.gravizo.com/svg?
-  digraph G {
-    size ="4,4";
-    main -> printf [style=bold,label="100 times"];
-    node [shape=box,style=filled,color=".7 .3 1.0"];
-    execute -> compare;
-  }
-)
-
-## mermaid
+##### mermaid
 ```mermaid
   graph TD;
       A-->B;
@@ -49,3 +23,12 @@ YOLO. Donate your money to wall street. Professionally.
       B-->D;
       C-->D;
 ```
+
+##### Gravizo  
+not supported by github
+
+<img src='https://g.gravizo.com/svg?
+ digraph G {
+   main -> parse -> execute;
+ }
+'/>
