@@ -1,5 +1,5 @@
 from models import Stock, YahooProvider
-from views import GUI, TUI, Telegram
+from views import GUI, Telegram
 from edgar.edgar import RecentSubmissionsAtom
 
 from rich.table import Table
