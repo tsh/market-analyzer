@@ -59,7 +59,7 @@ class RecentSubmissionsAtom:
     def __init__(self):
         self.headers = {'User-Agent': 'Market-Analyzer', 'Accept': 'application/json'}
 
-    def get_data(self) -> [RecentSubmissionAtomParser]:
+    def parsers(self) -> [RecentSubmissionAtomParser]:
         url = 'https://www.sec.gov/cgi-bin/browse-edgar'
         start = 0
         count = 100
@@ -84,6 +84,13 @@ class RecentSubmissionsAtom:
                 r.raise_for_status()
 
 
+    def get_instruments(self) -> list:
+        instruments = []
+        for parser in self.parsers():
+            for entree in parser.entries:
+                instrument = entree['title'].lower()           
+                instruments.append(instruments)
+        return instruments
 
 
 class DailyArchive:
