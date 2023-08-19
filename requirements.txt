@@ -6,3 +6,5 @@ yfinance==0.1.64
 requests
 beautifulsoup4
 plotext
+textual==0.33
+edgartools
