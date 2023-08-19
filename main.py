@@ -1,4 +1,3 @@
-from models import Stock, YahooProvider
 from views import GUI, Telegram
 from edgar.edgar import RecentSubmissionsAtom
 
