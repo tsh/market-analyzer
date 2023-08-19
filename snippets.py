@@ -25,3 +25,16 @@ class IBKRProvider:
         positions = requests.get('https://localhost:5000/v1/api/portfolio/{accountId}/positions/{pageId}'.format(accountId=acc_id, pageId=0), verify=False)
         print(positions.json())
 
+
+
+
+
+import matplotlib.pyplot as plt
+class GUI():
+    def display(self, stock):
+        fig, ax = plt.subplots(figsize=(10, 10))
+        ax.plot(stock.history()['Date'], stock.history()['Close'])
+        plt.show()
+
+
+

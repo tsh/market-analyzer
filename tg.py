@@ -1,18 +1,5 @@
 import os
-
 import requests
-import matplotlib
-import matplotlib.pyplot as plt
-from matplotlib.dates import datestr2num
-from rich.console import Console
-from rich.table import Table
-
-
-class GUI():
-    def display(self, stock):
-        fig, ax = plt.subplots(figsize=(10, 10))
-        ax.plot(stock.history()['Date'], stock.history()['Close'])
-        plt.show()
 
 
 class Telegram:
@@ -33,5 +20,6 @@ class Telegram:
         rsp.raise_for_status()
 
 
-
-
+if __name__ == '__main__':
+    tg = Telegram()
+    tg.send('test')
