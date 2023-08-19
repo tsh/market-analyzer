@@ -1,5 +1,6 @@
 import os
 import requests
+import datetime
 
 
 class Telegram:
@@ -20,6 +21,21 @@ class Telegram:
         rsp.raise_for_status()
 
 
+def get_edgar(date, interests) -> str:
+    from edgar import set_identity, get_filings
+    set_identity("tsh tsh test@test.com")
+
+    filings = get_filings().filter(filing_date=date.strftime('%Y-%m-%d'))
+    # filings = get_filings().filter(filing_date=date.strftime('2023-08-17'))
+    df = filings.to_pandas()
+    df = df[df['cik'].isin(interests)]
+    return str(df)
+
+
 if __name__ == '__main__':
     tg = Telegram()
-    tg.send('test')
+    dt = datetime.datetime.today()
+    interests = []
+    filings = get_edgar(dt, interests)
+    tg.send(f'As of {dt} w/ {interests}')
+    tg.send(filings)
