@@ -28,34 +28,29 @@ def get_data():
             iv = get_iv_atm(chain.calls)
             date_iv[date] = iv
         data[stock] = date_iv
+    return options_dates, data
 
-    res ={}
-    for stock, date_iv in data.items():
-        pass
-        # df = v[0]
-        # dff = df.loc[df['inTheMoney'] == False]
-        # last_history = v[1].tail(1)
-        # res[s]= {'date': last_history.index.to_list()[0].strftime('%Y-%m-%d'),
-        #          'price': round(last_history.iloc[0].High, 2),
-        #          'iv': round(dff.impliedVolatility.mean(), 2)}
-    return options_dates, res
-
-def convert_to_df(stocks:dict):
-    df = DataFrame({'2023-01-01': [12, 28],
-                    '23': [12,22]}, index=['BITO', 'TEST'])
-    return df
 
 if __name__ == '__main__':
-        # options_dates, stock_data = get_data()
-        df = convert_to_df({})
+        options_dates, stock_data = get_data()
 
         table = Table(show_header=True, header_style="bold ")
         table.add_column("Ticker", justify="right", style="cyan", no_wrap=True)
-        for date in df.columns:
-            table.add_column(str(date))
 
-        for stock, values in zip(df.index,df.values.tolist()):
-            table.add_row(stock, *[str(v) for v in values])
+        columns = sorted(options_dates)
+        for d in columns:
+            table.add_column(d)
+
+        for stock, data in stock_data.items():
+            row = []
+            for date in columns:
+                row.append(str(data.get(date, '-')))
+            table.add_row(stock, *row)
+        # for date in df.columns:
+        #     table.add_column(str(date))
+        #
+        # for stock, values in zip(df.index,df.values.tolist()):
+        #     table.add_row(stock, *[str(v) for v in values])
         console = Console()
         console.print(table)
 
