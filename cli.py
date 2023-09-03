@@ -1,4 +1,6 @@
 from typing import Iterable, Type
+import logging 
+
 import yfinance as yf
 from pandas import DataFrame
 from rich.table import Table
@@ -13,18 +15,25 @@ from textual.widgets import DataTable
 from pprint import pprint
 
 
+class Errors:
+    NO_ATM = 'No ATM'  # Some options available, but no ATM
+
+
 def get_iv_atm(chain: DataFrame) -> float:
     chain['nearStrike'] = chain['inTheMoney'].shift(periods=1, fill_value=chain['inTheMoney'].head()[0]) \
                               != chain['inTheMoney']
     # TODO: calc mean with multiple options near ATM
     near_strike = chain[chain['nearStrike'] == True]
+    if near_strike.empty:
+        logging.warning('No atm for:\n %s', chain)
+        return Errors.NO_ATM
     return near_strike['impliedVolatility'].values[0]
 
 
 def get_data():
     data = {}
     options_dates = set()
-    for stock in track(['BITO', 'APLD'], description='getting data'):
+    for stock in ['APLD']:
         ticker = yf.Ticker(stock)
         opt_dates = ticker.options
         options_dates.update(opt_dates)
@@ -71,24 +80,25 @@ def render_rich(data:list):
 
 
 class TableApp(App):
+    CSS_PATH = 'textual.tcss'
+
     def __init__(self, data, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.data = data
 
     def compose(self) -> ComposeResult:
-        yield DataTable()
+        yield DataTable(id='iv-table')
 
     def on_mount(self) -> None:
         table = self.query_one(DataTable)
         table.add_columns(*self.data[0])
         table.add_rows(self.data[1:])
-        table.add_row('1', '2', '3')
 
 
 if __name__ == '__main__':
     options_dates, stock_data = get_data()
     iv_table = make_table(options_dates, stock_data)
-    print(iv_table)
+
     # render_rich(iv_table)
     app = TableApp(iv_table)
     app.run()
