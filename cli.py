@@ -1,3 +1,4 @@
+from typing import Iterable
 import yfinance as yf
 from pandas import DataFrame
 from rich.table import Table
@@ -18,7 +19,7 @@ def get_iv_atm(chain: DataFrame) -> float:
 def get_data():
     data = {}
     options_dates = set()
-    for stock in track(['BITO', 'APLD'], description='getting data'):
+    for stock in track(['BITO'], description='getting data'):
         ticker = yf.Ticker(stock)
         opt_dates = ticker.options
         options_dates.update(opt_dates)
@@ -31,26 +32,41 @@ def get_data():
     return options_dates, data
 
 
-if __name__ == '__main__':
-        options_dates, stock_data = get_data()
-
-        table = Table(show_header=True, header_style="bold ")
-        table.add_column("Ticker", justify="right", style="cyan", no_wrap=True)
-
-        columns = sorted(options_dates)
-        for d in columns:
-            table.add_column(d)
-
-        for stock, data in stock_data.items():
+def make_table(options_dates: Iterable, stock_data: dict):
+    """
+    create array resembling table:
+    Ticker  | date1 | date2
+    name    |  iv1  | iv2
+    """
+    table = []
+    columns = sorted(options_dates)
+    table.append(['Ticker'] + list(columns))
+    for stock_name, data in stock_data.items():
             row = []
             for date in columns:
                 row.append(str(data.get(date, '-')))
-            table.add_row(stock, *row)
-        # for date in df.columns:
-        #     table.add_column(str(date))
-        #
-        # for stock, values in zip(df.index,df.values.tolist()):
-        #     table.add_row(stock, *[str(v) for v in values])
+            table.append([stock_name] + row)
+    return table
+
+
+def render_rich():
+     pass
+
+
+if __name__ == '__main__':
+        options_dates, stock_data = get_data()
+        iv_table = make_table(options_dates, stock_data)
+
+        table = Table(show_header=True, header_style="bold ")
+
+        for i, c in enumerate(iv_table[0]):
+            if i == 0:
+                # Highlight instr name w/ diff color
+                table.add_column(c, style='cyan')
+            else:
+                table.add_column(c)
+
+        for row in iv_table[1:]:
+            table.add_row(*row)
         console = Console()
         console.print(table)
-
