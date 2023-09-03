@@ -1,9 +1,14 @@
-from typing import Iterable
+from typing import Iterable, Type
 import yfinance as yf
 from pandas import DataFrame
 from rich.table import Table
 from rich.console import Console
 from rich.progress import track
+
+from textual._path import CSSPathType
+from textual.driver import Driver
+from textual.app import App, CSSPathType, ComposeResult
+from textual.widgets import DataTable
 
 from pprint import pprint
 
@@ -19,7 +24,7 @@ def get_iv_atm(chain: DataFrame) -> float:
 def get_data():
     data = {}
     options_dates = set()
-    for stock in track(['BITO'], description='getting data'):
+    for stock in track(['BITO', 'APLD'], description='getting data'):
         ticker = yf.Ticker(stock)
         opt_dates = ticker.options
         options_dates.update(opt_dates)
@@ -49,24 +54,44 @@ def make_table(options_dates: Iterable, stock_data: dict):
     return table
 
 
-def render_rich():
-     pass
+def render_rich(data:list):
+    console = Console()
+    table = Table(show_header=True, header_style="bold ")
+    # Header
+    for i, c in enumerate(iv_table[0]):
+        if i == 0:
+            # Highlight instr name w/ diff color
+            table.add_column(c, style='cyan')
+        else:
+            table.add_column(c)
+    # Rows
+    for row in iv_table[1:]:
+        table.add_row(*row)
+    console.print(table)
+
+
+class TableApp(App):
+    def __init__(self, data, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.data = data
+
+    def compose(self) -> ComposeResult:
+        yield DataTable()
+
+    def on_mount(self) -> None:
+        table = self.query_one(DataTable)
+        table.add_columns(*self.data[0])
+        table.add_rows(self.data[1:])
+        table.add_row('1', '2', '3')
 
 
 if __name__ == '__main__':
-        options_dates, stock_data = get_data()
-        iv_table = make_table(options_dates, stock_data)
+    options_dates, stock_data = get_data()
+    iv_table = make_table(options_dates, stock_data)
+    print(iv_table)
+    # render_rich(iv_table)
+    app = TableApp(iv_table)
+    app.run()
 
-        table = Table(show_header=True, header_style="bold ")
+        
 
-        for i, c in enumerate(iv_table[0]):
-            if i == 0:
-                # Highlight instr name w/ diff color
-                table.add_column(c, style='cyan')
-            else:
-                table.add_column(c)
-
-        for row in iv_table[1:]:
-            table.add_row(*row)
-        console = Console()
-        console.print(table)
