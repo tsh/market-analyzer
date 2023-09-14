@@ -29,12 +29,6 @@ class IBKRProvider:
 
 
 
-import matplotlib.pyplot as plt
-class GUI():
-    def display(self, stock):
-        fig, ax = plt.subplots(figsize=(10, 10))
-        ax.plot(stock.history()['Date'], stock.history()['Close'])
-        plt.show()
 
 
 
