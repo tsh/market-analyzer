@@ -17,11 +17,16 @@ from pprint import pprint
 
 class Errors:
     NO_ATM = 'No ATM'  # Some options available, but no ATM
+    EMPTY_CHAIN = 'Empty chain'
+    NO_OPTIONS_FOR_DATE = 'no4d'
 
 
 def get_iv_atm(chain: DataFrame) -> float:
+    if chain.empty:
+        logging.warning('Empty chain for:\n %s', chain)
+        return Errors.EMPTY_CHAIN
     chain['nearStrike'] = chain['inTheMoney'].shift(periods=1, fill_value=chain['inTheMoney'].head()[0]) \
-                              != chain['inTheMoney']
+                            != chain['inTheMoney']
     # TODO: calc mean with multiple options near ATM
     near_strike = chain[chain['nearStrike'] == True]
     if near_strike.empty:
@@ -33,7 +38,11 @@ def get_iv_atm(chain: DataFrame) -> float:
 def get_data():
     data = {}
     options_dates = set()
-    for stock in ['APLD']:
+    for stock in [ 
+                'APLD', 'MARA', 'COIN', 'ANY', 'ARBK', 'BTBT', 'BTDR', 'BITF', 'CIFR',
+                'CLSK', 'CORZ', 'DGHI', 'DMG', 'GREE', 'HIVE', 'HUT', 'IREN', 'GLXY.TO', 'MIGI'
+                ]:
+        logging.info('Fetching: %s', stock)
         ticker = yf.Ticker(stock)
         opt_dates = ticker.options
         options_dates.update(opt_dates)
@@ -58,7 +67,7 @@ def make_table(options_dates: Iterable, stock_data: dict):
     for stock_name, data in stock_data.items():
             row = []
             for date in columns:
-                row.append(str(data.get(date, '-')))
+                row.append(str(data.get(date, Errors.NO_OPTIONS_FOR_DATE)))
             table.append([stock_name] + row)
     return table
 
@@ -93,6 +102,8 @@ class TableApp(App):
         table = self.query_one(DataTable)
         table.add_columns(*self.data[0])
         table.add_rows(self.data[1:])
+        table.fixed_columns = 1
+        table.cursor_type='row'
 
 
 if __name__ == '__main__':
