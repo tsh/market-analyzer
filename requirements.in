@@ -1,0 +1,10 @@
+matplotlib==3.4
+pandas==2.2.2
+rich==13.7.1
+yfinance==0.1.96
+requests==2.32.2
+beautifulsoup4
+plotext
+textual-dev==1
+edgartools==2.22.2
+pip-tools==7.4.1
