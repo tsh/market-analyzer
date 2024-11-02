@@ -4,6 +4,9 @@
 
 YOLO. Donate your money to wall street. Professionally.
 
+`pip install -r requirements.txt
+. ./setup.sh`
+
 # Stock
 - calculate expected value
 - find local max
