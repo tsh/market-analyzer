@@ -1,0 +1,4 @@
+[tool.bandit]
+skips = ["B113"]
+exclude_dirs = ["*/tests/*"]
+targets = ['.']
