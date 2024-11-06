@@ -40,7 +40,8 @@ def get_data():
     options_dates = set()
     for stock in [ 
                 'APLD', 'MARA', 'COIN', 'ANY', 'ARBK', 'BTBT', 'BTDR', 'BITF', 'CIFR',
-                'CLSK', 'CORZ', 'DGHI', 'DMG', 'GREE', 'HIVE', 'HUT', 'IREN', 'GLXY.TO', 'MIGI'
+                'CLSK', 'CORZ', 'DGHI', 'DMG', 'GREE', 'HIVE', 'HUT', 'IREN', 'GLXY.TO', 'MIGI',
+                'IBIT', 'ETHA', 'BITO'
                 ]:
         logging.info('Fetching: %s', stock)
         ticker = yf.Ticker(stock)
