@@ -17,7 +17,7 @@ def display(standardize=True):
         else:
             data = stock_data['Close']
 
-        ax.plot(stock_data['Date'], data, label=stock_name)
+        ax.plot(stock_data['Date'].values, data.values, label=stock_name)
     plt.legend()
     plt.show()
 
