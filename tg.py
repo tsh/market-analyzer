@@ -20,6 +20,11 @@ class Telegram:
                                                                                           'text': msg})
         rsp.raise_for_status()
 
+    def send_photo(self, obj):
+        import telepot
+        bot = telepot.Bot(self.token)
+        bot.sendPhoto(self.chat_id, obj)
+
 
 def get_edgar(date, interests) -> str:
     from edgar import set_identity, get_filings
@@ -35,7 +40,9 @@ def get_edgar(date, interests) -> str:
 if __name__ == '__main__':
     tg = Telegram()
     dt = datetime.datetime.today()
-    interests = []
+    interests = ['GLXY', 'COIN', 'BITO']
     filings = get_edgar(dt, interests)
     tg.send(f'As of {dt} w/ {interests}')
     tg.send(filings)
+    # tg.send_photo(open('Figure_1.png', 'rb'))
+
