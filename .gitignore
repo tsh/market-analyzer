@@ -1,6 +1,7 @@
-# saved hitstorical data
-.data
 .idea
+# saved hitstorical data
+data
+*.png
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
