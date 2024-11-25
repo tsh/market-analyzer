@@ -1,12 +1,17 @@
+import json
 import os
 import requests
-import datetime
+import datetime as dt
+
+from portfolio import Portfolio
+from api import SeekingAlpha
+import config
 
 
 class Telegram:
     def __init__(self):
         self.chat_id_prev = 595574277
-        self.token = os.environ['TG_TOKEN']
+        self.token = config.TG_TOKEN
         rsp = requests.get(f'https://api.telegram.org/bot{self.token}/getUpdates')
         rsp.raise_for_status()
         chat_id = None
@@ -39,10 +44,16 @@ def get_edgar(date, interests) -> str:
 
 if __name__ == '__main__':
     tg = Telegram()
-    dt = datetime.datetime.today()
-    interests = ['GLXY', 'COIN', 'BITO']
-    filings = get_edgar(dt, interests)
-    tg.send(f'As of {dt} w/ {interests}')
+    today = dt.datetime.today()
+    interests = Portfolio.notification_interests()
+    filings = get_edgar(today, interests)
+    tg.send(f'As of {today} w/ {interests}')
     tg.send(filings)
     # tg.send_photo(open('Figure_1.png', 'rb'))
 
+    past_day = today - dt.timedelta(days=1)
+    unix_past_day = past_day.timestamp()
+    sa = SeekingAlpha()
+    articles = sa.get_articles(unix_past_day)
+    with open(os.path.join(config.DATA_DIR, f'{past_day:%Y_%m_%d}.json'), 'w') as f:
+        f.write(json.dumps(articles))
