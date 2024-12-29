@@ -11,3 +11,4 @@ PyQt5==5.15.11
 telepot==12.7
 selenium==4.27.1
 prefect==3.1.7
+ansible==10.7.0
