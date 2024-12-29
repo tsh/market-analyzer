@@ -1,0 +1,20 @@
+- name: My first play
+  hosts: hosts-local
+  vars:
+    - download_dir: lib
+  tasks:
+   - name: Ping my hosts
+     ansible.builtin.ping:
+
+   - name: Download chrome webdriver
+     register: webdriver_zip
+     ansible.builtin.get_url:
+       url: https://chromedriver.storage.googleapis.com/114.0.5735.90/chromedriver_linux64.zip
+       dest: "{{ download_dir }}/chromedriver_linux64.zip"
+       checksum: md5:cd6613edf6628041684393706b62d3a6
+
+   - name: Extract webdriver
+     ansible.builtin.unarchive:
+       src: "{{ webdriver_zip.dest }}"
+       dest: "{{ download_dir }}/"
+       remote_src: yes
