@@ -11,7 +11,7 @@ from edgar import RecentSubmissionAtomParser
 
 
 TESTS_DIR = os.path.dirname(os.path.realpath(__file__))
-DATA_DIR = os.path.join(TESTS_DIR, 'data')
+DATA_DIR = os.path.join(TESTS_DIR, 'fixtures')
 
 class TestParseRecentSubmissions(unittest.TestCase):
     def setUp(self):

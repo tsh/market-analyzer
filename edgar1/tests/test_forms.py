@@ -4,7 +4,7 @@ import unittest
 from edgar import Form4, Relationship
 
 TESTS_DIR = os.path.dirname(os.path.realpath(__file__))
-DATA_DIR = os.path.join(TESTS_DIR, 'data')
+DATA_DIR = os.path.join(TESTS_DIR, 'fixtures')
 
 
 class Form4TestCase(unittest.TestCase):
