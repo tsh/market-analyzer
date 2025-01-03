@@ -6,7 +6,7 @@ requests==2.32.2
 beautifulsoup4
 plotext
 textual-dev==1
-edgartools==2.22.2
+edgartools==3.6.3
 PyQt5==5.15.11
 telepot==12.7
 selenium==4.27.1
