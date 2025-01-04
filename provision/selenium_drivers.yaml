@@ -1,7 +1,7 @@
 - name: My first play
   hosts: hosts-local
   vars:
-    - download_dir: lib
+    - download_dir: ../lib
   tasks:
    - name: Ping my hosts
      ansible.builtin.ping:
