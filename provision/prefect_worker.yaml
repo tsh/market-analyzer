@@ -1,0 +1,29 @@
+- name: setup systemd prefect worker
+  hosts: hosts-local
+  vars:
+    work_dir: "{{ playbook_dir | dirname}}"
+    prefect_exec: "{{ work_dir }}/.env/bin/prefect"
+    work_pool_name: laptop-local
+    service_user: "{{ ansible_user_id }}"
+  tasks:
+    - name: Ping my hosts
+      ansible.builtin.ping:
+
+    - name: Prefect | create systemd service file
+      become: yes
+      template:
+        src: prefect_worker.service.j2
+        dest: /lib/systemd/system/prefect_worker.service
+        mode: 644
+      notify:
+        - reload systemctl
+
+    - name: Prefect | start worker
+      service:
+        name: prefect_worker.service
+        state: started
+        enabled: yes
+
+  handlers:
+    - name: reload systemctl
+      command: systemctl daemon-reload

@@ -1,0 +1,11 @@
+[Unit]
+Description=Prefect worker
+
+[Service]
+User={{ service_user }}
+WorkingDirectory={{ work_dir }}
+ExecStart={{ prefect_exec }} worker start --pool {{ work_pool_name }}
+Restart=always
+
+[Install]
+WantedBy=multi-user.target
