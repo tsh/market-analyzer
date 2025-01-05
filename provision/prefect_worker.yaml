@@ -5,6 +5,7 @@
     prefect_exec: "{{ work_dir }}/.env/bin/prefect"
     work_pool_name: laptop-local
     service_user: "{{ ansible_user_id }}"
+    tg_token: "{{ lookup('env', 'TG_TOKEN') }}"
   tasks:
     - name: Ping my hosts
       ansible.builtin.ping:
@@ -26,4 +27,7 @@
 
   handlers:
     - name: reload systemctl
-      command: systemctl daemon-reload
+      ansible.builtin.systemd_service:
+        state: restarted
+        daemon_reload: true
+        name: prefect_worker.service

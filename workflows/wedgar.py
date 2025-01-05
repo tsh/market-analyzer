@@ -50,7 +50,12 @@ def edgar_ownership(run_date: date= None):
 
 
 if __name__ == "__main__":
-    edgar_ownership(date(2024, 12, 12))
-    # edgar_ownership.serve(name="my-first-deployment", cron="* * * * *",
-    #                   parameters={'run_date': '2024-12-12'}
-    #                   )
+    edgar_ownership.from_source(
+        source='https://github.com/tsh/market-analyzer.git',
+        entrypoint='workflows/wedgar.py:edgar_ownership'  # TODO: dynamic path
+    ).deploy(
+        name="edgar-ownership-deploy",
+        work_pool_name="laptop-local",  # TODO: link w/ ansible
+        cron="*/2 * * * *"
+    )
+

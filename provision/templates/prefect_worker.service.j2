@@ -6,6 +6,7 @@ User={{ service_user }}
 WorkingDirectory={{ work_dir }}
 ExecStart={{ prefect_exec }} worker start --pool {{ work_pool_name }}
 Restart=always
+Environment="TG_TOKEN={{ tg_token }}"
 
 [Install]
 WantedBy=multi-user.target
