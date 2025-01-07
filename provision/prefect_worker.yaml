@@ -10,24 +10,32 @@
     - name: Ping my hosts
       ansible.builtin.ping:
 
-    - name: Prefect | create systemd service file
+    - name: Create systemd worker service file
       become: yes
       template:
         src: prefect_worker.service.j2
         dest: /lib/systemd/system/prefect_worker.service
         mode: 644
       notify:
-        - reload systemctl
+        - restart worker
+        - restart systemd-resolved
 
-    - name: Prefect | start worker
-      service:
+    - name: Sanity check, make sure worker is on
+      ansible.builtin.systemd_service:
         name: prefect_worker.service
         state: started
         enabled: yes
 
   handlers:
-    - name: reload systemctl
+    - name: restart worker
       ansible.builtin.systemd_service:
         state: restarted
         daemon_reload: true
         name: prefect_worker.service
+
+    # Sometimes dns fails for new services, need to restart daemon
+    - name: restart systemd-resolved
+      ansible.builtin.systemd_service:
+        name: systemd-resolved
+        state: restarted
+        enabled: yes
