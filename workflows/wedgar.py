@@ -3,6 +3,8 @@ import sys
 from pathlib import Path
 
 from prefect import flow, task, runtime
+from prefect.logging import get_run_logger
+
 from edgar import set_identity, get_filings
 
 file = Path(__file__).resolve()
@@ -44,7 +46,8 @@ def notify(cik: set):
 
 @flow(log_prints=True)
 def edgar_ownership(run_date: date= None):
-    print('Running for ', run_date)
+    logger = get_run_logger()
+    logger.info('Running for ' + str(run_date))
     cur_date = run_date or runtime.flow_run.scheduled_start_time
     cik = get_edgar_ownership_on_date(cur_date)
     notify(cik)
