@@ -13,6 +13,7 @@ from tg import Telegram
 from portfolio import Portfolio
 
 
+@task
 def get_edgar_ownership_on_date(date) -> set:
     set_identity("tsh tsh test@test.com")
     filings = get_filings(filing_date=date.strftime('%Y-%m-%d'), form=['3', '4', '5'])
@@ -34,7 +35,6 @@ def notify(cik: set):
     portfolio = Portfolio()
     interests = portfolio.interest_cik()
     to_notify = cik.intersection(interests)
-    to_send = ''
     print('Sending message to tg')
     if to_notify:
         tg.send(str(to_notify))
@@ -44,6 +44,7 @@ def notify(cik: set):
 
 @flow(log_prints=True)
 def edgar_ownership(run_date: date= None):
+    print('Running for ', run_date)
     cur_date = run_date or runtime.flow_run.scheduled_start_time
     cik = get_edgar_ownership_on_date(cur_date)
     notify(cik)
@@ -59,4 +60,5 @@ if __name__ == "__main__":
         work_pool_name="laptop-local",  # TODO: link w/ ansible
         cron="*/2 * * * *"
     )
+    # edgar_ownership(date(2024,12,12))
 
