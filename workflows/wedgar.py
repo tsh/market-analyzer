@@ -15,11 +15,11 @@ from tg import Telegram
 from portfolio import Portfolio
 
 
-logger = get_run_logger()
 
 
 @task
 def get_edgar_ownership_on_date(date) -> set:
+    logger = get_run_logger()
     logger.info('+++ GETTING EDGAR')
 
     set_identity("tsh tsh test@test.com")
@@ -38,6 +38,7 @@ def get_edgar_ownership_on_date(date) -> set:
 def notify(cik: set):
     # if not cik:
     #     return None
+    logger = get_run_logger()
     logger.info('STARTING TG process')
     tg = Telegram()
     portfolio = Portfolio()
@@ -52,6 +53,7 @@ def notify(cik: set):
 
 @flow(log_prints=True)
 def edgar_ownership(run_date: date= None):
+    logger = get_run_logger()
     cur_date = run_date or runtime.flow_run.scheduled_start_time
     logger.info('+++ Running for ' + str(run_date))
     cik = get_edgar_ownership_on_date(cur_date)
