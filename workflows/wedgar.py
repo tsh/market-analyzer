@@ -35,6 +35,7 @@ def notify(cik: set):
     interests = portfolio.interest_cik()
     to_notify = cik.intersection(interests)
     to_send = ''
+    print('Sending message to tg')
     if to_notify:
         tg.send(str(to_notify))
     else:
