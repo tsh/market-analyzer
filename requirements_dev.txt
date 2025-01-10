@@ -7,29 +7,64 @@
 aiohttp==3.9.5
     # via
     #   -r requirements.txt
+    #   telepot
     #   textual-dev
 aiosignal==1.3.1
     # via
     #   -r requirements.txt
     #   aiohttp
+aiosqlite==0.20.0
+    # via
+    #   -r requirements.txt
+    #   prefect
+alembic==1.14.0
+    # via
+    #   -r requirements.txt
+    #   prefect
 annotated-types==0.7.0
     # via
     #   -r requirements.txt
     #   pydantic
+ansible==10.7.0
+    # via -r requirements.txt
+ansible-core==2.17.7
+    # via
+    #   -r requirements.txt
+    #   ansible
 anyio==4.4.0
     # via
     #   -r requirements.txt
     #   httpx
+    #   prefect
+    #   starlette
+apprise==1.9.1
+    # via
+    #   -r requirements.txt
+    #   prefect
+asgi-lifespan==2.1.0
+    # via
+    #   -r requirements.txt
+    #   prefect
 asttokens==2.4.1
     # via stack-data
 async-timeout==4.0.3
     # via
     #   -r requirements.txt
     #   aiohttp
+    #   asyncpg
+    #   python-socks
+asyncpg==0.30.0
+    # via
+    #   -r requirements.txt
+    #   prefect
 attrs==23.2.0
     # via
     #   -r requirements.txt
     #   aiohttp
+    #   jsonschema
+    #   outcome
+    #   referencing
+    #   trio
 bandit==1.7.10
     # via -r requirements_dev.in
 beautifulsoup4==4.12.3
@@ -38,48 +73,96 @@ beautifulsoup4==4.12.3
     #   edgartools
     #   yfinance
 build==1.2.1
+    # via pip-tools
+cachetools==5.5.0
     # via
     #   -r requirements.txt
-    #   pip-tools
+    #   prefect
 certifi==2024.2.2
     # via
     #   -r requirements.txt
+    #   apprise
     #   httpcore
     #   httpx
     #   requests
+    #   selenium
+cffi==1.17.1
+    # via
+    #   -r requirements.txt
+    #   cryptography
 cfgv==3.4.0
     # via pre-commit
 charset-normalizer==3.3.2
     # via
     #   -r requirements.txt
-    #   edgartools
     #   requests
 click==8.1.7
     # via
     #   -r requirements.txt
+    #   apprise
     #   pip-tools
+    #   prefect
     #   textual-dev
-coverage==7.6.4
-    # via -r requirements_dev.in
-cycler==0.12.1
+    #   typer
+    #   uvicorn
+cloudpickle==3.1.0
     # via
     #   -r requirements.txt
-    #   matplotlib
+    #   prefect
+colorama==0.4.6
+    # via
+    #   -r requirements.txt
+    #   griffe
+coolname==2.2.0
+    # via
+    #   -r requirements.txt
+    #   prefect
+coverage==7.6.4
+    # via -r requirements_dev.in
+croniter==5.0.1
+    # via
+    #   -r requirements.txt
+    #   prefect
+cryptography==44.0.0
+    # via
+    #   -r requirements.txt
+    #   ansible-core
+    #   prefect
+dateparser==1.2.0
+    # via
+    #   -r requirements.txt
+    #   prefect
 decorator==5.1.1
     # via
     #   ipdb
     #   ipython
+deprecated==1.2.15
+    # via
+    #   -r requirements.txt
+    #   opentelemetry-api
 distlib==0.3.9
     # via virtualenv
-edgartools==2.22.2
+docker==7.1.0
+    # via
+    #   -r requirements.txt
+    #   prefect
+edgartools==3.6.3
     # via -r requirements.txt
 exceptiongroup==1.2.1
     # via
     #   -r requirements.txt
     #   anyio
     #   ipython
+    #   prefect
+    #   pytest
+    #   trio
+    #   trio-websocket
 executing==2.1.0
     # via stack-data
+fastapi==0.115.6
+    # via
+    #   -r requirements.txt
+    #   prefect
 fastcore==1.5.41
     # via
     #   -r requirements.txt
@@ -95,10 +178,36 @@ frozenlist==1.4.1
     #   -r requirements.txt
     #   aiohttp
     #   aiosignal
+fsspec==2024.12.0
+    # via
+    #   -r requirements.txt
+    #   prefect
+graphviz==0.20.3
+    # via
+    #   -r requirements.txt
+    #   prefect
+greenlet==3.1.1
+    # via
+    #   -r requirements.txt
+    #   sqlalchemy
+griffe==1.5.4
+    # via
+    #   -r requirements.txt
+    #   prefect
 h11==0.14.0
     # via
     #   -r requirements.txt
     #   httpcore
+    #   uvicorn
+    #   wsproto
+h2==4.1.0
+    # via
+    #   -r requirements.txt
+    #   httpx
+hpack==4.0.0
+    # via
+    #   -r requirements.txt
+    #   h2
 html5lib==1.1
     # via
     #   -r requirements.txt
@@ -107,14 +216,22 @@ httpcore==1.0.5
     # via
     #   -r requirements.txt
     #   httpx
-httpx==0.27.0
+    #   prefect
+httpx[http2]==0.27.0
     # via
     #   -r requirements.txt
     #   edgartools
+    #   prefect
 humanize==4.9.0
     # via
     #   -r requirements.txt
     #   edgartools
+    #   jinja2-humanize-extension
+    #   prefect
+hyperframe==6.0.1
+    # via
+    #   -r requirements.txt
+    #   h2
 identify==2.6.1
     # via pre-commit
 idna==3.7
@@ -123,17 +240,46 @@ idna==3.7
     #   anyio
     #   httpx
     #   requests
+    #   trio
     #   yarl
+importlib-metadata==8.5.0
+    # via
+    #   -r requirements.txt
+    #   opentelemetry-api
+iniconfig==2.0.0
+    # via pytest
 ipdb==0.13.13
     # via -r requirements_dev.in
 ipython==8.29.0
     # via ipdb
 jedi==0.19.1
     # via ipython
-kiwisolver==1.4.5
+jinja2==3.1.5
     # via
     #   -r requirements.txt
-    #   matplotlib
+    #   ansible-core
+    #   jinja2-humanize-extension
+    #   prefect
+jinja2-humanize-extension==0.4.0
+    # via
+    #   -r requirements.txt
+    #   prefect
+jsonpatch==1.33
+    # via
+    #   -r requirements.txt
+    #   prefect
+jsonpointer==3.0.0
+    # via
+    #   -r requirements.txt
+    #   jsonpatch
+jsonschema==4.23.0
+    # via
+    #   -r requirements.txt
+    #   prefect
+jsonschema-specifications==2024.10.1
+    # via
+    #   -r requirements.txt
+    #   jsonschema
 linkify-it-py==2.0.3
     # via
     #   -r requirements.txt
@@ -143,14 +289,25 @@ lxml==5.2.2
     #   -r requirements.txt
     #   edgartools
     #   yfinance
+mako==1.3.8
+    # via
+    #   -r requirements.txt
+    #   alembic
+markdown==3.7
+    # via
+    #   -r requirements.txt
+    #   apprise
 markdown-it-py[linkify,plugins]==3.0.0
     # via
     #   -r requirements.txt
     #   mdit-py-plugins
     #   rich
     #   textual
-matplotlib==3.4.0
-    # via -r requirements.txt
+markupsafe==3.0.2
+    # via
+    #   -r requirements.txt
+    #   jinja2
+    #   mako
 matplotlib-inline==0.1.7
     # via ipython
 mdit-py-plugins==0.4.1
@@ -174,46 +331,70 @@ multitasking==0.0.11
     # via
     #   -r requirements.txt
     #   yfinance
+nest-asyncio==1.6.0
+    # via
+    #   -r requirements.txt
+    #   edgartools
 nodeenv==1.9.1
     # via pre-commit
 numpy==1.26.4
     # via
     #   -r requirements.txt
-    #   matplotlib
     #   pandas
     #   pyarrow
     #   rank-bm25
     #   yfinance
+oauthlib==3.2.2
+    # via
+    #   -r requirements.txt
+    #   requests-oauthlib
+opentelemetry-api==1.29.0
+    # via
+    #   -r requirements.txt
+    #   prefect
 orjson==3.10.3
     # via
     #   -r requirements.txt
     #   edgartools
+    #   prefect
+outcome==1.3.0.post0
+    # via
+    #   -r requirements.txt
+    #   trio
 packaging==24.0
     # via
     #   -r requirements.txt
+    #   ansible-core
     #   build
     #   fastcore
+    #   prefect
+    #   pytest
 pandas==2.2.2
     # via
     #   -r requirements.txt
     #   edgartools
+    #   sec-cik-mapper
     #   yfinance
 parso==0.8.4
     # via jedi
+pathspec==0.12.1
+    # via
+    #   -r requirements.txt
+    #   prefect
 pbr==6.1.0
     # via stevedore
 peewee==3.17.7
     # via
     #   -r requirements.txt
     #   yfinance
-pexpect==4.9.0
-    # via ipython
-pillow==10.3.0
+pendulum==3.0.0
     # via
     #   -r requirements.txt
-    #   matplotlib
-pip-tools==7.4.1
-    # via -r requirements.txt
+    #   prefect
+pexpect==4.9.0
+    # via ipython
+pip-tools==7.1.0
+    # via -r requirements_dev.in
 platformdirs==4.3.6
     # via
     #   -r requirements.txt
@@ -221,8 +402,16 @@ platformdirs==4.3.6
     #   yfinance
 plotext==5.2.8
     # via -r requirements.txt
+pluggy==1.5.0
+    # via pytest
 pre-commit==4.0.1
     # via -r requirements_dev.in
+prefect==3.1.7
+    # via -r requirements.txt
+prometheus-client==0.21.1
+    # via
+    #   -r requirements.txt
+    #   prefect
 prompt-toolkit==3.0.48
     # via ipython
 ptyprocess==0.7.0
@@ -233,87 +422,215 @@ pyarrow==16.1.0
     # via
     #   -r requirements.txt
     #   edgartools
+pycparser==2.22
+    # via
+    #   -r requirements.txt
+    #   cffi
 pydantic==2.7.2
     # via
     #   -r requirements.txt
     #   edgartools
+    #   fastapi
+    #   prefect
+    #   pydantic-extra-types
+    #   pydantic-settings
 pydantic-core==2.18.3
     # via
     #   -r requirements.txt
+    #   prefect
     #   pydantic
+pydantic-extra-types==2.10.1
+    # via
+    #   -r requirements.txt
+    #   prefect
+pydantic-settings==2.7.0
+    # via
+    #   -r requirements.txt
+    #   prefect
 pygments==2.18.0
     # via
     #   -r requirements.txt
     #   ipython
     #   rich
-pyparsing==3.1.2
-    # via
-    #   -r requirements.txt
-    #   matplotlib
 pyproject-hooks==1.1.0
+    # via build
+pyqt5==5.15.11
+    # via -r requirements.txt
+pyqt5-qt5==5.15.15
     # via
     #   -r requirements.txt
-    #   build
-    #   pip-tools
+    #   pyqt5
+pyqt5-sip==12.15.0
+    # via
+    #   -r requirements.txt
+    #   pyqt5
+pysocks==1.7.1
+    # via
+    #   -r requirements.txt
+    #   urllib3
+pytest==8.3.4
+    # via -r requirements_dev.in
 python-dateutil==2.9.0.post0
     # via
     #   -r requirements.txt
-    #   matplotlib
+    #   croniter
+    #   dateparser
     #   pandas
+    #   pendulum
+    #   prefect
+    #   time-machine
+python-dotenv==1.0.1
+    # via
+    #   -r requirements.txt
+    #   pydantic-settings
+python-slugify==8.0.4
+    # via
+    #   -r requirements.txt
+    #   prefect
+python-socks[asyncio]==2.6.1
+    # via
+    #   -r requirements.txt
+    #   prefect
 pytz==2024.1
     # via
     #   -r requirements.txt
+    #   croniter
+    #   dateparser
     #   pandas
+    #   prefect
     #   yfinance
 pyyaml==6.0.2
     # via
+    #   -r requirements.txt
+    #   ansible-core
+    #   apprise
     #   bandit
     #   pre-commit
+    #   prefect
 rank-bm25==0.2.1
     # via
     #   -r requirements.txt
     #   edgartools
+rapidfuzz==3.11.0
+    # via
+    #   -r requirements.txt
+    #   edgartools
+readchar==4.2.1
+    # via
+    #   -r requirements.txt
+    #   prefect
+referencing==0.35.1
+    # via
+    #   -r requirements.txt
+    #   jsonschema
+    #   jsonschema-specifications
+regex==2024.11.6
+    # via
+    #   -r requirements.txt
+    #   dateparser
 requests==2.32.2
     # via
     #   -r requirements.txt
+    #   apprise
+    #   docker
+    #   requests-oauthlib
+    #   sec-cik-mapper
     #   yfinance
+requests-oauthlib==2.0.0
+    # via
+    #   -r requirements.txt
+    #   apprise
+resolvelib==1.0.1
+    # via
+    #   -r requirements.txt
+    #   ansible-core
+rfc3339-validator==0.1.4
+    # via
+    #   -r requirements.txt
+    #   prefect
 rich==13.7.1
     # via
     #   -r requirements.txt
     #   bandit
     #   edgartools
+    #   prefect
     #   textual
+    #   typer
+rpds-py==0.22.3
+    # via
+    #   -r requirements.txt
+    #   jsonschema
+    #   referencing
+ruamel-yaml==0.18.6
+    # via
+    #   -r requirements.txt
+    #   prefect
+ruamel-yaml-clib==0.2.12
+    # via
+    #   -r requirements.txt
+    #   ruamel-yaml
+sec-cik-mapper==2.1.0
+    # via -r requirements.txt
+selenium==4.27.1
+    # via -r requirements.txt
+shellingham==1.5.4
+    # via
+    #   -r requirements.txt
+    #   typer
 six==1.16.0
     # via
     #   -r requirements.txt
     #   asttokens
     #   html5lib
     #   python-dateutil
+    #   rfc3339-validator
 sniffio==1.3.1
     # via
     #   -r requirements.txt
     #   anyio
+    #   asgi-lifespan
     #   httpx
+    #   prefect
+    #   trio
+sortedcontainers==2.4.0
+    # via
+    #   -r requirements.txt
+    #   trio
 soupsieve==2.5
     # via
     #   -r requirements.txt
     #   beautifulsoup4
+sqlalchemy[asyncio]==2.0.36
+    # via
+    #   -r requirements.txt
+    #   alembic
+    #   prefect
 stack-data==0.6.3
     # via ipython
 stamina==24.2.0
     # via
     #   -r requirements.txt
     #   edgartools
+starlette==0.41.3
+    # via
+    #   -r requirements.txt
+    #   fastapi
 stevedore==5.3.0
     # via bandit
 tabulate==0.9.0
     # via
     #   -r requirements.txt
     #   edgartools
+telepot==12.7
+    # via -r requirements.txt
 tenacity==8.3.0
     # via
     #   -r requirements.txt
     #   stamina
+text-unidecode==1.3
+    # via
+    #   -r requirements.txt
+    #   python-slugify
 textdistance==4.6.2
     # via
     #   -r requirements.txt
@@ -324,37 +641,92 @@ textual==0.63.5
     #   textual-dev
 textual-dev==1.0.0
     # via -r requirements.txt
-tomli==2.0.1
+time-machine==2.16.0
     # via
     #   -r requirements.txt
+    #   pendulum
+toml==0.10.2
+    # via
+    #   -r requirements.txt
+    #   prefect
+tomli==2.0.1
+    # via
     #   build
     #   ipdb
     #   pip-tools
+    #   pytest
+tqdm==4.67.1
+    # via
+    #   -r requirements.txt
+    #   edgartools
 traitlets==5.14.3
     # via
     #   ipython
     #   matplotlib-inline
+trio==0.28.0
+    # via
+    #   -r requirements.txt
+    #   selenium
+    #   trio-websocket
+trio-websocket==0.11.1
+    # via
+    #   -r requirements.txt
+    #   selenium
+typer==0.13.1
+    # via
+    #   -r requirements.txt
+    #   prefect
 typing-extensions==4.12.0
     # via
     #   -r requirements.txt
+    #   aiosqlite
+    #   alembic
     #   anyio
+    #   fastapi
     #   ipython
+    #   prefect
     #   pydantic
     #   pydantic-core
+    #   pydantic-extra-types
+    #   sec-cik-mapper
+    #   selenium
+    #   sqlalchemy
     #   textual
     #   textual-dev
+    #   typer
+    #   uvicorn
 tzdata==2024.1
     # via
     #   -r requirements.txt
     #   pandas
+    #   pendulum
+tzlocal==5.2
+    # via
+    #   -r requirements.txt
+    #   dateparser
 uc-micro-py==1.0.3
     # via
     #   -r requirements.txt
     #   linkify-it-py
-urllib3==2.2.1
+ujson==5.10.0
     # via
     #   -r requirements.txt
+    #   prefect
+unidecode==1.3.8
+    # via
+    #   -r requirements.txt
+    #   edgartools
+urllib3[socks]==2.2.1
+    # via
+    #   -r requirements.txt
+    #   docker
     #   requests
+    #   selenium
+    #   telepot
+uvicorn==0.34.0
+    # via
+    #   -r requirements.txt
+    #   prefect
 virtualenv==20.27.1
     # via pre-commit
 wcwidth==0.2.13
@@ -363,16 +735,34 @@ webencodings==0.5.1
     # via
     #   -r requirements.txt
     #   html5lib
-wheel==0.43.0
+websocket-client==1.8.0
     # via
     #   -r requirements.txt
-    #   pip-tools
+    #   selenium
+websockets==13.1
+    # via
+    #   -r requirements.txt
+    #   prefect
+wheel==0.43.0
+    # via pip-tools
+wrapt==1.17.0
+    # via
+    #   -r requirements.txt
+    #   deprecated
+wsproto==1.2.0
+    # via
+    #   -r requirements.txt
+    #   trio-websocket
 yarl==1.9.4
     # via
     #   -r requirements.txt
     #   aiohttp
 yfinance==0.2.48
     # via -r requirements.txt
+zipp==3.21.0
+    # via
+    #   -r requirements.txt
+    #   importlib-metadata
 
 # The following packages are considered to be unsafe in a requirements file:
 # pip
