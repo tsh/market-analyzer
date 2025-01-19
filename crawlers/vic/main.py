@@ -48,6 +48,17 @@ class Parser:
         self.page_content = page_content
         self.soup = BeautifulSoup(self.page_content, 'html.parser')
 
+    def urls(self) -> set:
+        to_exclude = {'/login', '/signup', None, '/idea/apply', '/'}
+        prefix_to_avoid = ['#', 'http', '/help']
+        urls = set()
+        for a in self.soup.find_all('a'):
+            url = a.get('href')
+            if url in to_exclude or any(map(url.startswith, prefix_to_avoid)):
+                continue
+            urls.add(url)
+        return urls
+
 
 class VICIdeasParser(Parser):
     def get_ideas_links(self) -> list:
@@ -61,17 +72,34 @@ class IdeaParser(Parser):
     def get_author_url(self) -> str:
         return self.soup.find('div', attrs={'class': 'idea_by'}).find('a').get('href')
 
-    def get_publication_date(self):
+    def get_publication_date(self) -> datetime:
         raw_text = self.soup.find('div', attrs={'class': 'idea_by'}).find('div').text
-        text = raw_text[:-3]  # rm `by`
+        text = raw_text[:-3]  # cut "by " from date
         return dateutil.parser.parse(text)
+
+    def get_idea_description(self) -> str:
+        return self.soup.find(attrs={'id':'description'}).text
+
+    def get_ticker(self) -> str:
+        raise NotImplementedError
+
+    def get_conclusion(self) -> str:
+        # class different at every page
+        raw_text = self.soup.find_all('p', attrs={'class': 'MsoNormal'})
+        if not raw_text:
+            pass
+        raise NotImplementedError
+
+
+class AuthorParser(Parser):
+    pass
 
 
 with Driver() as d:
     url_idea = f'{URL_VIC}/idea/INMUNE_BIO_INC/3528803511'
     content = d.get(url_idea)
     parsed = IdeaParser(content)
-    print(parsed.get_publication_date())
+    print(parsed.urls())
 
 
 # with Driver() as d:
