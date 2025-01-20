@@ -1,14 +1,16 @@
 import sys
-from datetime import datetime
+import os
 from pathlib import Path
+import json
 
-from bs4 import BeautifulSoup, SoupStrainer
-import dateutil
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.common.by import By
+import selenium.common.exceptions as excs
+
+from parsers import IdeaParser, VICIdeasParser, AuthorParser
 
 file = Path(__file__).resolve()
 project_dir = file.parents[2]
@@ -17,8 +19,6 @@ sys.path.append(str(project_dir))
 import config as cfg
 
 URL_VIC = 'http://valueinvestorsclub.com'
-
-
 
 
 class Driver:
@@ -43,69 +43,62 @@ class Driver:
         self.driver.quit()
 
 
-class Parser:
-    def __init__(self, page_content: str):
-        self.page_content = page_content
-        self.soup = BeautifulSoup(self.page_content, 'html.parser')
-
-    def urls(self) -> set:
-        to_exclude = {'/login', '/signup', None, '/idea/apply', '/'}
-        prefix_to_avoid = ['#', 'http', '/help']
-        urls = set()
-        for a in self.soup.find_all('a'):
-            url = a.get('href')
-            if url in to_exclude or any(map(url.startswith, prefix_to_avoid)):
-                continue
-            urls.add(url)
-        return urls
-
-
-class VICIdeasParser(Parser):
-    def get_ideas_links(self) -> list:
-        links = []
-        for link in  self.soup.find(id='ideas_body').find_all('a'):
-            links.append(link.get('href'))
-        return links
-
-
-class IdeaParser(Parser):
-    def get_author_url(self) -> str:
-        return self.soup.find('div', attrs={'class': 'idea_by'}).find('a').get('href')
-
-    def get_publication_date(self) -> datetime:
-        raw_text = self.soup.find('div', attrs={'class': 'idea_by'}).find('div').text
-        text = raw_text[:-3]  # cut "by " from date
-        return dateutil.parser.parse(text)
-
-    def get_idea_description(self) -> str:
-        return self.soup.find(attrs={'id':'description'}).text
-
-    def get_ticker(self) -> str:
-        raise NotImplementedError
-
-    def get_conclusion(self) -> str:
-        # class different at every page
-        raw_text = self.soup.find_all('p', attrs={'class': 'MsoNormal'})
-        if not raw_text:
-            pass
-        raise NotImplementedError
-
-
-class AuthorParser(Parser):
+class FileQueue:
     pass
 
+class CrawlManager:
+    def __init__(self):
+        self.storage_file_name = os.path.join(cfg.CRAWL_PAGES_DIR, 'crawl_db.json')
+        if os.path.exists(self.storage_file_name):
+            with open(self.storage_file_name, 'r') as f:
+                self.db = json.load(f)
+        else:
+            self.db = {}
 
-with Driver() as d:
-    url_idea = f'{URL_VIC}/idea/INMUNE_BIO_INC/3528803511'
-    content = d.get(url_idea)
-    parsed = IdeaParser(content)
-    print(parsed.urls())
+    def persist(self):
+        with open(self.storage_file_name, 'w') as f:
+            json.dump(self.db, f)
+
+    def is_seen(self, url):
+        return url in self.db
+
+    def save_content(self, url, content):
+        fname =  f"{url.replace('/', '_')}.html"
+        with open(os.path.join(cfg.CRAWL_PAGES_DIR, fname), 'w') as f:
+            f.write(content)
+        self.db[url] = {'url': url,
+                        'file_name': fname,
+                        'is_parsed': False}
 
 
-# with Driver() as d:
-#     url_vic_ideas = f'{URL_VIC}/ideas'
-#     selector = (By.CSS_SELECTOR, "#ideas_body>.row")
-#     content = d.get(url_vic_ideas, selector)
-#     vip = VICIdeasParser(content)
-#     links = vip.get_ideas_links()
-#     print(links)
+if __name__ == '__main__':
+    manager = CrawlManager()
+    q = ['/idea/INMUNE_BIO_INC/3528803511']
+    dlq = set()
+    counter = 0
+    with Driver() as d:
+
+        while q:
+            url = q.pop()
+            full_url = f'{URL_VIC}{url}'
+            print(counter, url)
+            try:
+                content = d.get(full_url)
+            except excs.InvalidArgumentException as e:
+                dlq.add(url)
+
+            manager.save_content(url, content)
+            parsed = IdeaParser(content)
+            parsed_urls = parsed.urls()
+
+            for parsed_url in parsed_urls:
+                if manager.is_seen(parsed_url) or parsed_url in dlq:
+                    continue
+                q.append(parsed_url)
+
+            print(q)
+            counter += 1
+            if counter % 3 == 0:
+                manager.persist()
+            elif counter > 3:
+                break

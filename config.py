@@ -1,7 +1,9 @@
 import os
 
-BASE_DIR = os.path.dirname(os.path.realpath(__file__))
-DATA_DIR = os.path.join(BASE_DIR, 'data')
+PROJECT_DIR = os.path.dirname(os.path.realpath(__file__))
+DATA_DIR = os.path.join(PROJECT_DIR, 'data')
+CRAWL_PAGES_DIR = os.path.join(DATA_DIR, 'crawled')
+LIB_DIR = os.path.join(PROJECT_DIR, 'lib')
 
 TG_TOKEN = os.environ['TG_TOKEN']
 
