@@ -10,7 +10,7 @@ class Parser:
         self.soup = BeautifulSoup(self.page_content, 'html.parser')
 
     def urls(self) -> set:
-        to_exclude = {'/login', '/signup', None, '/idea/apply', '/'}
+        to_exclude = {'/login', '/signup', None, '/idea/apply', '/', 'javascript:void(0)'}
         prefix_to_avoid = ['#', 'http', '/help']
         urls = set()
         for a in self.soup.find_all('a'):
