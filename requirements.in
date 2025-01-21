@@ -1,14 +1,19 @@
-yfinance==0.2.48
 requests==2.32.2
-beautifulsoup4
-plotext
+beautifulsoup4==4.12.3
+selenium==4.27.1
+
+plotext==5.2.8
 rich==13.7.1
 textual-dev==1
 PyQt5==5.15.11
+
 telepot==12.7
-selenium==4.27.1
+
 prefect==3.1.7
 ansible==10.7.0
 
+yfinance==0.2.48
 edgartools==3.6.3
 sec-cik-mapper==2.1.0
+
+tinydb==4.8.2
