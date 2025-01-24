@@ -9,6 +9,9 @@ from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.common.by import By
 import selenium.common.exceptions as excs
+from tinydb import TinyDB, Query, where
+from tinydb.storages import JSONStorage
+
 
 from parsers import IdeaParser, VICIdeasParser, AuthorParser
 
@@ -43,38 +46,27 @@ class Driver:
         self.driver.quit()
 
 
-class FileQueue:
-    pass
-
 class CrawlManager:
     def __init__(self):
-        self.storage_file_name = os.path.join(cfg.CRAWL_PAGES_DIR, 'crawl_db.json')
-        if os.path.exists(self.storage_file_name):
-            with open(self.storage_file_name, 'r') as f:
-                self.db = json.load(f)
-        else:
-            self.db = {}
-
-    def persist(self):
-        with open(self.storage_file_name, 'w') as f:
-            json.dump(self.db, f)
-
-    def is_seen(self, url):
-        return url in self.db
+        self.db = TinyDB(os.path.join(cfg.DATABASE_DIR, 'crawl_manager.json'))
 
     def save_content(self, url, content):
         fname =  f"{url.replace('/', '_')}.html"
         with open(os.path.join(cfg.CRAWL_PAGES_DIR, fname), 'w') as f:
             f.write(content)
-        self.db[url] = {'url': url,
+        self.db.insert({'url': url,
                         'file_name': fname,
-                        'is_parsed': False}
+                        'is_parsed': False})
+
+    def get_non_parsed(self):
+        return self.db.search(where('is_parsed') == False)
 
 
 if __name__ == '__main__':
     manager = CrawlManager()
     q = ['/idea/INMUNE_BIO_INC/3528803511']
     dlq = set()
+    seen = set()
     counter = 0
     with Driver() as d:
 
@@ -92,13 +84,11 @@ if __name__ == '__main__':
             parsed_urls = parsed.urls()
 
             for parsed_url in parsed_urls:
-                if manager.is_seen(parsed_url) or parsed_url in dlq:
+                if parsed_url in seen or parsed_url in dlq:
                     continue
                 q.append(parsed_url)
 
             print(q)
             counter += 1
-            if counter % 3 == 0:
-                manager.persist()
-            elif counter > 3:
+            if counter > 1:
                 break
