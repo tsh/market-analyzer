@@ -2,6 +2,7 @@ import sys
 import os
 from pathlib import Path
 import json
+import logging
 
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
@@ -14,6 +15,8 @@ from tinydb.storages import JSONStorage
 
 
 from parsers import IdeaParser, VICIdeasParser, AuthorParser
+
+logger = logging.getLogger(__name__)
 
 file = Path(__file__).resolve()
 project_dir = file.parents[2]
@@ -51,19 +54,23 @@ class CrawlManager:
         self.db = TinyDB(os.path.join(cfg.DATABASE_DIR, 'crawl_manager.json'))
 
     def save_content(self, url, content):
-        fname =  f"{url.replace('/', '_')}.html"
+        fname = self.url_to_filename(url)
         with open(os.path.join(cfg.CRAWL_PAGES_DIR, fname), 'w') as f:
             f.write(content)
         self.db.insert({'url': url,
                         'file_name': fname,
                         'is_parsed': False})
 
+    @staticmethod
+    def url_to_filename(url):
+        return f"{url.replace('/', '_')}.html"
+
     def get_non_parsed(self):
         return self.db.search(where('is_parsed') == False)
 
 
-if __name__ == '__main__':
-    manager = CrawlManager()
+
+def download_pages(manager: CrawlManager):
     q = ['/idea/INMUNE_BIO_INC/3528803511']
     dlq = set()
     seen = set()
@@ -92,3 +99,10 @@ if __name__ == '__main__':
             counter += 1
             if counter > 1:
                 break
+
+
+def parse_page(manager):
+    pass
+
+if __name__ == '__main__':
+    manager = CrawlManager()
