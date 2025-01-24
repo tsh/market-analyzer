@@ -5,12 +5,14 @@ from bs4 import BeautifulSoup, SoupStrainer
 
 
 class Parser:
+    TO_EXCLUDE = set()
+    
     def __init__(self, page_content: str):
         self.page_content = page_content
         self.soup = BeautifulSoup(self.page_content, 'html.parser')
 
     def urls(self) -> set:
-        to_exclude = {'/login', '/signup', None, '/idea/apply', '/', 'javascript:void(0)'}
+        to_exclude = {'/login', '/signup', None,  '/', 'javascript:void(0)'}.union(self.TO_EXCLUDE)
         prefix_to_avoid = ['#', 'http', '/help']
         urls = set()
         for a in self.soup.find_all('a'):
@@ -21,7 +23,11 @@ class Parser:
         return urls
 
 
-class VICIdeasParser(Parser):
+class VICParser(Parser):
+    TO_EXCLUDE = {'/idea/apply'}
+
+
+class VICIdeasParser(VICParser):
     def get_ideas_links(self) -> list:
         links = []
         for link in  self.soup.find(id='ideas_body').find_all('a'):
@@ -29,7 +35,7 @@ class VICIdeasParser(Parser):
         return links
 
 
-class IdeaParser(Parser):
+class IdeaParser(VICParser):
     def get_author_url(self) -> str:
         return self.soup.find('div', attrs={'class': 'idea_by'}).find('a').get('href')
 
