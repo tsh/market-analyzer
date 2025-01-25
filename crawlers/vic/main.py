@@ -16,7 +16,6 @@ from tinydb.storages import JSONStorage
 
 from parsers import IdeaParser, VICIdeasParser, AuthorParser
 
-logger = logging.getLogger(__name__)
 
 file = Path(__file__).resolve()
 project_dir = file.parents[2]
@@ -24,6 +23,10 @@ sys.path.append(str(project_dir))
 
 import config as cfg
 
+logger = logging.getLogger(__name__)
+logger.warning('test')
+
+sys.exit()
 URL_VIC = 'http://valueinvestorsclub.com'
 
 
