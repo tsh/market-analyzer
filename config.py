@@ -1,5 +1,8 @@
 import os
 
+import logging
+logging.basicConfig(format='%(asctime)s %(filename)s \t %(levelname)s:  \t %(message)s', level=logging.DEBUG, encoding='utf-8')
+logging.info('ifn')
 PROJECT_DIR = os.path.dirname(os.path.realpath(__file__))
 
 DATABASE_DIR = os.path.join(PROJECT_DIR, 'data', 'db')
