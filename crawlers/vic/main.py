@@ -24,9 +24,7 @@ sys.path.append(str(project_dir))
 import config as cfg
 
 logger = logging.getLogger(__name__)
-logger.warning('test')
 
-sys.exit()
 URL_VIC = 'http://valueinvestorsclub.com'
 
 
@@ -53,12 +51,18 @@ class Driver:
 
 
 class CrawlManager:
-    def __init__(self):
-        self.db = TinyDB(os.path.join(cfg.DATABASE_DIR, 'crawl_manager.json'))
+    def __init__(self, domain):
+        """
+        Args:
+            domain: what data are we parsing? vic, edgar, etc
+                    Also used as prefix for db file, and parent dir for all pages in `data` directory
+        """
+        self.domain = domain
+        self.db = TinyDB(os.path.join(cfg.DATABASE_DIR, f'{domain}_crawl_manager.json'))
 
     def save_content(self, url, content):
         fname = self.url_to_filename(url)
-        with open(os.path.join(cfg.CRAWL_PAGES_DIR, fname), 'w') as f:
+        with open(os.path.join(cfg.CRAWL_PAGES_DIR, self.domain, fname), 'w') as f:
             f.write(content)
         self.db.insert({'url': url,
                         'file_name': fname,
@@ -66,9 +70,10 @@ class CrawlManager:
 
     @staticmethod
     def url_to_filename(url):
-        return f"{url.replace('/', '_')}.html"
+        name = url.split('/')[-1]
+        return f"{name}.html"
 
-    def get_non_parsed(self):
+    def get_not_parsed(self) -> list:
         return self.db.search(where('is_parsed') == False)
 
 
@@ -105,7 +110,17 @@ def download_pages(manager: CrawlManager):
 
 
 def parse_page(manager):
-    pass
+    manager = CrawlManager('vic')
+    to_parse = manager.get_not_parsed()
+    counter = 0
+    while to_parse:
+        if counter > 0:
+            break
+        record = to_parse.pop()
+        with open(record.file_name) as f:
+            content = ...
+        counter +=1
 
 if __name__ == '__main__':
-    manager = CrawlManager()
+
+

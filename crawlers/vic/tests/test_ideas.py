@@ -2,6 +2,7 @@ import os
 
 import pytest
 
+from ..parsers import IdeasParser
 
 DIR_PATH = os.path.dirname(os.path.realpath(__file__))
 
@@ -13,5 +14,6 @@ def ideas_page():
 
 
 def test_get_a(ideas_page):
+    parser = IdeasParser(ideas_page)
     assert True
         

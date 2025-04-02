@@ -30,7 +30,7 @@ class VICParser(Parser):
 class VICIdeasParser(VICParser):
     def get_ideas_links(self) -> list:
         links = []
-        for link in  self.soup.find(id='ideas_body').find_all('a'):
+        for link in self.soup.find(id='ideas_body').find_all('a'):
             links.append(link.get('href'))
         return links
 
