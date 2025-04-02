@@ -1,3 +1,4 @@
+import argparse
 from typing import Iterable, Type
 import logging 
 
@@ -40,8 +41,8 @@ def get_data():
     options_dates = set()
     for stock in [ 
                 'APLD', 'MARA', 'COIN', 'ANY', 'ARBK', 'BTBT', 'BTDR', 'BITF', 'CIFR',
-                'CLSK', 'CORZ', 'DGHI', 'DMG', 'GREE', 'HIVE', 'HUT', 'IREN', 'GLXY.TO', 'MIGI',
-                'IBIT', 'ETHA', 'BITO'
+                # 'CLSK', 'CORZ', 'DGHI', 'DMG', 'GREE', 'HIVE', 'HUT', 'IREN', 'GLXY.TO', 'MIGI',
+                # 'IBIT', 'ETHA', 'BITO'
                 ]:
         logging.info('Fetching: %s', stock)
         ticker = yf.Ticker(stock)
@@ -75,7 +76,7 @@ def make_table(options_dates: Iterable, stock_data: dict):
 
 def render_rich(data:list):
     console = Console()
-    table = Table(show_header=True, header_style="bold ")
+    table = Table(title='CALL options IV per date', caption='caption', show_header=True, header_style="bold ")
     # Header
     for i, c in enumerate(iv_table[0]):
         if i == 0:
@@ -100,20 +101,39 @@ class TableApp(App):
         yield DataTable(id='iv-table')
 
     def on_mount(self) -> None:
-        table = self.query_one(DataTable)
+        # table = self.query_one(DataTable)
+        table = Table()
         table.add_columns(*self.data[0])
         table.add_rows(self.data[1:])
         table.fixed_columns = 1
         table.cursor_type='row'
 
 
+
 if __name__ == '__main__':
-    options_dates, stock_data = get_data()
-    iv_table = make_table(options_dates, stock_data)
+    parser = argparse.ArgumentParser(description='Show info about instruments')
+    commands = parser.add_subparsers(help='commands', required=True, dest='command')
 
-    # render_rich(iv_table)
-    app = TableApp(iv_table)
-    app.run()
+    options_parser = commands.add_parser('options', help='stock options info')
+    options_parser.add_argument('--type', choices=['call', 'put'])
+    stocks_parser = commands.add_parser('stocks', help='stocks info')
 
+    cliargs = parser.parse_args()
+    if cliargs.command == 'options':
+        options_dates, stock_data = get_data()
+        iv_table = make_table(options_dates, stock_data)
+
+        # render_rich(iv_table)
+        app = TableApp(iv_table)
+        app.run()
+    elif cliargs.command == 'stocks':
+        raise NotImplementedError()
+
+
+
+tt.get_recommendations
+tt.get_upgrades_downgrades
+tt.get_insider_transactions
+tt.get_analyst_price_targets
         
 

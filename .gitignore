@@ -1,6 +1,4 @@
 .idea
-# saved hitstorical data
-data
 *.png
 *.json
 *.[x]html

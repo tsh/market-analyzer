@@ -1,20 +1,28 @@
 # TESTED
-# ProsusAI/finbert              TEXT-CLASSIFICATION     BAD
-# yiyanghkust/finbert-tone      TEXT-CLASSIFICATION     GOOD
-# FINGU-AI/FinguAI-Chat-v1      TEXT-GENERATION         AVG (ok with ticker name, bad with ticker price)
+
+# ProsusAI/finbert                      TEXT-CLASSIFICATION     BAD
+# yiyanghkust/finbert-tone              TEXT-CLASSIFICATION     GOOD
+
+# FINGU-AI/FinguAI-Chat-v1              TEXT-GENERATION         AVG (ok with ticker name, bad with ticker price)
+# nidum/Nidum-Llama-3.2-3B-Uncensored   TEXT-GENERATION         GOOD (slow > 160s on cpu)
 
 
 from pprint import pprint
+import time
 
 statement = 'This is a fairly simple thesis of revenue growth and margin expansion. Most of the hard work of rolling out a new product together with difficult market conditions are behind now. The company just needs to keep doing what they’re doing in order to deliver satisfactory results. Based on moderate growth assumptions BKTI is a $33 stock by the end of 2025.'
 q_stock_name = [
-    {"role": "user", "content": f"answer in valid json like this {'ticker': 'stock name'}, {statement}"},
+    {"role": "user", "content": "answer in valid json like this {'ticker': 'stock name'}" + statement},
 ]
 q_stock_price = [
-    {"role": "user", "content": f"answer in valid json like this {'price': 42} what is the stock price: {statement}"}
+    {"role": "user", "content": "answer in valid json like this {'price': 42} what is the stock price: "+statement}
+]
+q_stock_all = [
+    {"role": "user", "content": "answer in valid json like this {'price': 42, 'ticker_name': 'name'} what is the stock price and ticker name:" + statement}
 ]
 
 
+# ======== VALID ==============
 # # positive/negative classifier
 # from transformers import BertTokenizer, BertForSequenceClassification, pipeline
 # import transformers
@@ -28,25 +36,33 @@ q_stock_price = [
 # print(results)
 
 
-
-# =================================
-
+#
+#
 # import torch
 # from transformers import pipeline, PretrainedConfig
 #
 # pipe = pipeline(
 #     "text-generation",
-#     model="nidum/Nidum-Llama-3.2-3B-Uncensored",  # VERY GOOD, very slow. There are lighter models
+#     model="nidum/Nidum-Llama-3.2-3B-Uncensored",
 #     model_kwargs={"torch_dtype": torch.bfloat16},
 #     config=PretrainedConfig(name_or_path='model-Q2_K')
 # )
 #
 #
+# start = time.time()
 # outputs = pipe(q_stock_price, max_new_tokens=256)
+# print(time.time() - start)
+# assistant_response = outputs[0]["generated_text"][-1]["content"].strip()
+# print(assistant_response)
+#
+# print("\nEND\n")
+# start = time.time()
+# outputs = pipe(q_stock_all, max_new_tokens=256)
+# print(time.time() - start)
 # assistant_response = outputs[0]["generated_text"][-1]["content"].strip()
 # print(assistant_response)
 
-# ============================
+# ======= WIP ==========================
 
 # from transformers import AutoModelForCausalLM, AutoTokenizer
 #

@@ -51,9 +51,10 @@ if __name__ == '__main__':
     tg.send(filings)
     # tg.send_photo(open('Figure_1.png', 'rb'))
 
-    past_day = today - dt.timedelta(days=1)
-    unix_past_day = past_day.timestamp()
-    sa = SeekingAlpha()
-    articles = sa.get_articles(unix_past_day)
-    with open(os.path.join(config.DATA_DIR, f'{past_day:%Y_%m_%d}.json'), 'w') as f:
-        f.write(json.dumps(articles))
+    # past_day = today - dt.timedelta(days=1)
+    # unix_past_day = past_day.timestamp()
+    # sa = SeekingAlpha()
+    # articles = sa.get_articles(unix_past_day)
+    # with open(os.path.join(config.DATA_DIR, f'alpha_articles_{past_day:%Y_%m_%d}.json'), 'w') as f:
+    #     f.write(json.dumps(articles))
+
