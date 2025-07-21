@@ -1,9 +1,9 @@
-Usage:
-> `ansible-playbook -i inventory.ini playbook.yaml`
-
 ### Prefect worker
-Prefect worker requires to run with sudo privileges:
+1. Install prefect workers. Prefect worker requires to run with sudo privileges:
 > `ansible-playbook -i inventory.ini prefect_worker.yaml --ask-become-pass`
+
+2. Download selenium drivers
+> `ansible-playbook -i inventory.ini selenium_drivers.yaml`
  
 IMPORTANT: 
 - Environment variable e.g. `TG_TOGEN` are passed on from the host machine when service file is generated
