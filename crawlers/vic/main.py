@@ -13,7 +13,6 @@ import selenium.common.exceptions as excs
 from tinydb import TinyDB, Query, where
 from tinydb.storages import JSONStorage
 
-
 from parsers import IdeaParser, VICIdeasParser, AuthorParser
 
 
@@ -51,7 +50,7 @@ class Driver:
 
 
 class CrawlManager:
-    def __init__(self, domain):
+    def __init__(self, domain='vic'):
         """
         Args:
             domain: what data are we parsing? vic, edgar, etc
@@ -62,7 +61,10 @@ class CrawlManager:
 
     def save_content(self, url, content):
         fname = self.url_to_filename(url)
-        with open(os.path.join(cfg.CRAWL_PAGES_DIR, self.domain, fname), 'w') as f:
+        domain_dir = os.path.join(cfg.CRAWL_PAGES_DIR, self.domain)
+        if not os.path.exists(domain_dir):
+            os.mkdir(domain_dir)
+        with open(os.path.join(domain_dir, fname), 'w') as f:
             f.write(content)
         self.db.insert({'url': url,
                         'file_name': fname,
@@ -122,5 +124,5 @@ def parse_page(manager):
         counter +=1
 
 if __name__ == '__main__':
-
+    download_pages(CrawlManager())
 
