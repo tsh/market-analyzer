@@ -12,7 +12,6 @@ CRAWL_PAGES_DIR = os.path.join(PROJECT_DIR, 'data', 'crawled')
 
 LIB_DIR = os.path.join(PROJECT_DIR, 'lib')
 
-TG_TOKEN = os.environ['TG_TOKEN']
 
 # ALPHA_VANTAGE_KEY = os.environ['ALPHA_VANTAGE_KEY']
 # SEEKING_ALPHA_KEY = os.environ['SEEKING_ALPHA_KEY']

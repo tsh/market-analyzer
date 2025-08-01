@@ -7,6 +7,7 @@ from portfolio import Portfolio
 from api import SeekingAlpha
 import config
 
+TG_TOKEN = os.environ['TG_TOKEN']
 
 class Telegram:
     def __init__(self):
