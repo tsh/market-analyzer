@@ -86,7 +86,6 @@ def download_pages(manager: CrawlManager):
     seen = set()
     counter = 0
     with Driver() as d:
-
         while q:
             url = q.pop()
             full_url = f'{URL_VIC}{url}'
@@ -107,7 +106,7 @@ def download_pages(manager: CrawlManager):
 
             print(q)
             counter += 1
-            if counter > 1:
+            if counter >= 1:
                 break
 
 
