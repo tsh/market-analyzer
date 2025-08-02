@@ -48,7 +48,7 @@ class IdeaParser(VICParser):
         return self.soup.find(attrs={'id':'description'}).text
 
     def get_ticker(self) -> str:
-        raise NotImplementedError
+        return self.soup.select('#top > div:nth-child(3) > div.row > div:nth-child(1) > div.idea_name > span > span')[0].text.lower()
 
     def get_conclusion(self) -> str:
         # class different at every page
