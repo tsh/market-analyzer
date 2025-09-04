@@ -2,36 +2,16 @@
 ![tests](https://github.com/tsh/market-analyzer/actions/workflows/python-app.yml/badge.svg)
 [![Coverage Status](https://coveralls.io/repos/github/tsh/market-analyzer/badge.svg?branch=master)](https://coveralls.io/github/tsh/market-analyzer?branch=master)
 
-YOLO. Donate your money to wall street. Professionally.
+# 
+YOLO! Donate your money to wall street. Professionally.
 
-`pip install -r requirements.txt
-. ./setup.sh`
+## Tests:
 
-# Stock
-- calculate expected value
-- find local max
-- How much return should I get to accomodate for broker commission, swift and taxes.
-- strategy reminders on specific date
+> pytest crawlers/vic/tests/test_idea_parser.py -s
 
-# Parse biot
+## Installation
 
-# Graph test    
+- `pip install -r requirements.txt`
+- `source setup.sh`
+- [non-python deps](provision/README.md)
 
-
-##### mermaid
-```mermaid
-  graph TD;
-      A-->B;
-      A-->C;
-      B-->D;
-      C-->D;
-```
-
-##### Gravizo  
-not supported by github
-
-<img src='https://g.gravizo.com/svg?
- digraph G {
-   main -> parse -> execute;
- }
-'/>
