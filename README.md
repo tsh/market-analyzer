@@ -7,7 +7,14 @@ YOLO! Donate your money to wall street. Professionally.
 
 ## Tests:
 
+Specific file:
 > pytest crawlers/vic/tests/test_idea_parser.py -s
+ 
+All with tag `smoke`:
+> pytest -s -m smoke 
+
+All except marked as smoke:
+> pytest -s -m "not smoke"
 
 ## Installation
 

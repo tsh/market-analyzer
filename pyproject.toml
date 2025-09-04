@@ -2,3 +2,9 @@
 skips = ["B113"]
 exclude_dirs = ["*/tests/*"]
 targets = ['.']
+
+[tool.pytest.ini_options]
+addopts = "--strict-markers"
+markers = [
+    "smoke: marks tests as slow (deselect with '-m \"not smoke\"')",
+]
