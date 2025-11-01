@@ -9,6 +9,7 @@ PROJECT_DIR = os.path.dirname(os.path.realpath(__file__))
 
 DATABASE_DIR = os.path.join(PROJECT_DIR, 'data', 'db')
 CRAWL_PAGES_DIR = os.path.join(PROJECT_DIR, 'data', 'crawled')
+SEC_EDGAR_DATA_DIR = os.path.join(PROJECT_DIR, 'data', 'sec_edgar')
 
 LIB_DIR = os.path.join(PROJECT_DIR, 'lib')
 

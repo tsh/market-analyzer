@@ -1,16 +1,36 @@
-# from datetime import datetime
+import datetime as dt
 from enum import Enum
+import os
 
 import requests
 import pandas as pd
-
-import feedparser
+# import feedparser
+import gzip
+import json
+import shutil
 import xml.etree.ElementTree as ET
 
+import config
+
+
+# RUN AS <from root dir> python3 -m <path to this file>
 
 class CIK:
-    """https://sec.report/Ticker/AAPL"""
-    pass
+    URL_CIK_TICKER = 'https://www.sec.gov/files/company_tickers_exchange.json'
+    HEADERS = {'User-Agent': 'Market@private.com',
+               'Accept': 'application/json',
+               "Accept-Encoding": "gzip, deflate",
+               }
+
+    @classmethod
+    def _download_mapping(cls):
+        today = dt.datetime.now().strftime('%Y-%m-%d')
+        filename = f'{today}_map_cik_ticker.json'
+        path = os.path.join(config.SEC_EDGAR_DATA_DIR, filename)
+        with (requests.get(cls.URL_CIK_TICKER, headers=cls.HEADERS) as src, open(path, 'wt') as dst):
+            src.raise_for_status()
+            data = json.loads(src.content)
+            json.dump(data, dst, indent=2)
 
 
 class CIK2Report:
@@ -23,7 +43,6 @@ class CIK2Report:
 class Agent:
     """User-Agent: Sample Company Name AdminContact@<sample company domain>.com
     Accept-Encoding: gzip, deflate"""
-
 
 
 class RecentSubmissionAtomParser:
