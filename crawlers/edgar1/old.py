@@ -13,24 +13,62 @@ import xml.etree.ElementTree as ET
 import config
 
 
-# RUN AS <from root dir> python3 -m <path to this file>
+# RUN AS <from root dir> python3 -m path.to.this.file (dots)
 
-# MUTUAL FUNDS:
-# TODO: https://www.sec.gov/files/company_tickers_mf.json
 
 class CIK:
-    URL_CIK_TICKER = 'https://www.sec.gov/files/company_tickers_exchange.json'
-    HEADERS = {'User-Agent': 'Market@private.com',
-               'Accept': 'application/json',
-               "Accept-Encoding": "gzip, deflate",
-               }
+    pass
 
-    @classmethod
-    def _download_mapping(cls):
-        today = dt.datetime.now().strftime('%Y-%m-%d')
-        filename = f'{today}_map_cik_ticker.json'
-        path = os.path.join(config.SEC_EDGAR_DATA_DIR, filename)
-        with (requests.get(cls.URL_CIK_TICKER, headers=cls.HEADERS) as src, open(path, 'wt') as dst):
+
+class CikTicker:
+    def __init__(self):
+        self.CIK_TICKER_URL = 'https://www.sec.gov/files/company_tickers_exchange.json'
+        self.CIK_TICKER_MAP_FILENAME = 'map_cik_ticker.json'
+        self.CIK_TICKER_PATH = os.path.join(config.SEC_EDGAR_DATA_DIR, self.CIK_TICKER_MAP_FILENAME)
+        self.CIK_IDX = 0
+        self.NAME_IDX = 1
+        self.TICKER_IDX = 2
+        self.EXCHANGE_IDX = 3
+        self.MUTUAL_FUNDS_URL = 'https://www.sec.gov/files/company_tickers_mf.json'
+        self.MUTUAL_FUNDS_FILE_NAME = 'map_cik_mf.json'
+        self.MUTUAL_FUNDS_PATH = os.path.join(config.SEC_EDGAR_DATA_DIR, self.MUTUAL_FUNDS_FILE_NAME)
+        self.SERIES_ID_IDX = 1
+        self.CLASS_ID_IDX = 2
+        self.SYMBOL_IDX = 3
+
+    def all_symbols_mutual_funds(self):
+        """incl etfs"""
+        return self._parse_file(self.MUTUAL_FUNDS_PATH, self.SYMBOL_IDX)
+
+    def all_tickers_companies(self):
+        return self._parse_file(self.CIK_TICKER_PATH, self.TICKER_IDX)
+
+    def all_tickers(self):
+        mf_symbols = self.all_symbols_mutual_funds()
+        stock_tickers = self.all_tickers_companies()
+        return mf_symbols + stock_tickers
+
+    def _parse_file(self, fpath, field_index):
+        with open(fpath, 'rt') as f:
+            parsed = json.load(f)
+        res = []
+        for d in parsed['data']:
+            res.append(d[field_index])
+        return res
+
+    def _download_cik_mapping(self):
+        self._download(self.CIK_TICKER_URL, self.CIK_TICKER_PATH)
+
+    def _download_mutual_funds_mapping(self):
+        self._download(self.MUTUAL_FUNDS_URL, self.MUTUAL_FUNDS_PATH)
+
+    def _download(self, frm: str, to_path: str):
+        # TODO: https://developer.mozilla.org/en-US/docs/Web/HTTP/Reference/Headers/If-Modified-Since
+        headers = {'User-Agent': 'Market@private.com',
+                   'Accept': 'application/json',
+                   "Accept-Encoding": "gzip, deflate",
+                   }
+        with (requests.get(frm, headers=headers) as src, open(to_path, 'wt') as dst):
             src.raise_for_status()
             data = json.loads(src.content)
             json.dump(data, dst, indent=2)
@@ -162,39 +200,39 @@ class Form4:
 
 if __name__ == '__main__':
     url = 'https://www.sec.gov/cgi-bin/browse-edgar'
-    params = {
-        'action': 'getcurrent',
-        'type': 4,
-        'owner': 'include',
-        'start': 0,
-        'count': 10,
-        'output': 'atom'
-    }
-    r = requests.get(url, params=params, headers=headers)
-    r.raise_for_status()
-    # parse
-    import feedparser
-    feed = feedparser.parse(r.content)
-    submission = {}
-    for s in feed.entries:
-        submission['link'] = s.link
-        submission['title'] = s.title
-        break
-    # submission page
-    r = requests.get(submission['link'], headers=headers)
-    r.raise_for_status()
-    from bs4 import BeautifulSoup
-    soup = BeautifulSoup(r.content, 'html')
-    report_links = []
-    for a in soup.find_all('a'):
-        link = a.get('href')
-        if link.startswith('/Archives') and link.endswith('.xml') and a.text.endswith('.xml'):
-            report_links.append(link)
-    # get report
-    for report_link in report_links:
-        r = requests.get('https://www.sec.gov' + report_link, headers=headers)
-        r.raise_for_status()
-
-    f4 = Form4(r.content)
-    print(r.content)
-    print(f4.reporting_owner_relationship())
+    # params = {
+    #     'action': 'getcurrent',
+    #     'type': 4,
+    #     'owner': 'include',
+    #     'start': 0,
+    #     'count': 10,
+    #     'output': 'atom'
+    # }
+    # r = requests.get(url, params=params, headers=headers)
+    # r.raise_for_status()
+    # # parse
+    # import feedparser
+    # feed = feedparser.parse(r.content)
+    # submission = {}
+    # for s in feed.entries:
+    #     submission['link'] = s.link
+    #     submission['title'] = s.title
+    #     break
+    # # submission page
+    # r = requests.get(submission['link'], headers=headers)
+    # r.raise_for_status()
+    # from bs4 import BeautifulSoup
+    # soup = BeautifulSoup(r.content, 'html')
+    # report_links = []
+    # for a in soup.find_all('a'):
+    #     link = a.get('href')
+    #     if link.startswith('/Archives') and link.endswith('.xml') and a.text.endswith('.xml'):
+    #         report_links.append(link)
+    # # get report
+    # for report_link in report_links:
+    #     r = requests.get('https://www.sec.gov' + report_link, headers=headers)
+    #     r.raise_for_status()
+    #
+    # f4 = Form4(r.content)
+    # print(r.content)
+    # print(f4.reporting_owner_relationship())
