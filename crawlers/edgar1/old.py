@@ -15,6 +15,9 @@ import config
 
 # RUN AS <from root dir> python3 -m <path to this file>
 
+# MUTUAL FUNDS:
+# TODO: https://www.sec.gov/files/company_tickers_mf.json
+
 class CIK:
     URL_CIK_TICKER = 'https://www.sec.gov/files/company_tickers_exchange.json'
     HEADERS = {'User-Agent': 'Market@private.com',
