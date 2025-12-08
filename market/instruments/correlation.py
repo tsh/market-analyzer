@@ -19,5 +19,5 @@ class DownloadTickerData:
         filename = f'{ticker}_{min_date}_{max_date}_OHLC.parquet'
         path = os.path.join(config.INSTRUMENT_DATA_DIR, filename)
         df.to_parquet(path, compression='zstd')
-        
+
 # df['Close'].dropna().corr()
