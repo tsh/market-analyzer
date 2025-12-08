@@ -5,7 +5,11 @@
 # 
 YOLO! Donate your money to wall street. Professionally.
 
-## Tests:
+## Run
+Run from this level, as module separated with dots:
+> python3 -m <path.to.the.file>  
+ 
+## Tests
 
 Specific file:
 > pytest crawlers/vic/tests/test_idea_parser.py -s
