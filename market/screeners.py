@@ -1,15 +1,17 @@
 import yfinance as yf
-from crawlers.sec.edgar import Edgar
-from pprint import pprint as print
 
+class MissingData(KeyError):
+    pass
 
+def is_crypto_related(stock: yf.Ticker) -> bool:
+    return 'crypto' in stock.info['longBusinessSummary']
 
 def is_low_pe(stock: yf.Ticker, base_pe: float) -> bool:
-        tpe = stock.info['trailingPE']
+        try:
+            tpe = stock.info['trailingPE']
+        except KeyError as e:
+            raise MissingData(e)
         return tpe <= base_pe
-
-def is_crypto(stock: yf.Ticker) -> bool:
-    return 'crypto' in stock.info['longBusinessSummary']
 
 def is_positive_recommendation(stock: yf.Ticker) -> bool:
     df = stock.get_recommendations_summary()
@@ -17,16 +19,11 @@ def is_positive_recommendation(stock: yf.Ticker) -> bool:
     sbuy, buy, hold, sell, ssel = r['strongBuy'], r['buy'], r['hold'], r['sell'], r['strongSell']
     return (sbuy + buy) > (hold + sell + ssel)
 
-
-msft = yf.Ticker('MSFT')
-print(is_positive_recommendation(msft))
-
-# spy = yf.Ticker("SPY").info['trailingPE']
-# baseline = spy * .8
-#
-# for ticker in Edgar.get_all_tickers():
-#     stock = yf.Ticker(ticker)
-#     if is_low_pe(stock, baseline):
-#         print(stock)
-#         print(stock.info)
-#         break
+def quarter_per(stock: yf.Ticker) -> float:
+    last_year = stock.info['trailingPE'] # trailing 12 month
+    df = stock.history()
+    cur_market_price = df['Close'].iloc[-1]
+    last_quarter = '2025-09-30'
+    diluted_eps = stock.quarterly_financials.T['Diluted EPS'].dropna()[last_quarter]
+    pe_ratio = cur_market_price / diluted_eps  # to large comparing to trailing from yf
+    return pe_ratio
