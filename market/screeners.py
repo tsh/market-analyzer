@@ -47,7 +47,6 @@ def edgar_diluted_eps(ticker):
     filling_year = latest_10k.to_dict()['filing_date'].year
     financials = latest_10k.obj().financials
     df = financials.get_income_statement().to_dataframe()
-    import ipdb;ipdb.set_trace()
     diluted_eps = float(df.loc['Diluted'][str(filling_year)].iloc[0])
     return diluted_eps
 
