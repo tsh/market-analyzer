@@ -16,6 +16,12 @@ def pe_yahoo(stock: yf.Ticker) -> float:
         raise MissingData(e)
     return tpe
 
+def eps_yahoo(stock: yf.Ticker) -> float:
+    try:
+        tpe = stock.info['epsTrailingTwelveMonths']
+    except KeyError as e:
+        raise MissingData(e)
+    return tpe
 
 def is_positive_recommendation(stock: yf.Ticker) -> bool:
     df = stock.get_recommendations_summary()
@@ -41,6 +47,7 @@ def edgar_diluted_eps(ticker):
     filling_year = latest_10k.to_dict()['filing_date'].year
     financials = latest_10k.obj().financials
     df = financials.get_income_statement().to_dataframe()
+    import ipdb;ipdb.set_trace()
     diluted_eps = float(df.loc['Diluted'][str(filling_year)].iloc[0])
     return diluted_eps
 
