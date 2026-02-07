@@ -1,60 +1,30 @@
-from abc import ABC, abstractmethod
 import yfinance as yf
+from utils.specification import AbstractSpecification
 
 class MissingData(KeyError):
     pass
 
 
-class Specification(ABC):
-    @abstractmethod
-    def is_satisfied_by(self, candidate) -> bool:
-        pass
+class IsPositiveReccommendation(AbstractSpecification):
+    def is_satisfied_by(self, stock: yf.Ticker):
+        df = stock.get_recommendations_summary()
+        r = df.iloc[0]
+        sbuy, buy, hold, sell, ssel = r['strongBuy'], r['buy'], r['hold'], r['sell'], r['strongSell']
+        return (sbuy + buy) > (hold + sell + ssel)
 
-class AbstractSpecification(Specification):
-    def __and__(self, other):
-        return AndSpecification(self, other)
-    def __or__(self, other):
-        return OrSpecification(self, other)
 
-class AndSpecification(AbstractSpecification):
-    def __init__(self, one, other):
-        self.one = one
-        self.other = other
+class IsCryptoRelated(AbstractSpecification):
+    def is_satisfied_by(self, stock: yf.Ticker):
+        return 'crypto' in stock.info['longBusinessSummary']
 
-    def is_satisfied_by(self, candidate) -> bool:
-        return self.one.is_satisfied_by(candidate) and self.other.is_satisfied_by(candidate)
 
-class OrSpecification(AbstractSpecification):
-    def __init__(self, one, other):
-        self.one = one
-        self.other = other
+class IsLowPE(AbstractSpecification):
+    def __init__(self, base_pe):
+        self.base_pe = base_pe
 
-    def is_satisfied_by(self, candidate) -> bool:
-        return self.one.is_satisfied_by(candidate) or self.other.is_satisfied_by(candidate)
+    def is_satisfied_by(self, stock_pe: float):
+            return stock_pe <= self.base_pe
 
-class NotSpecification(AbstractSpecification):
-    def __init__(self, x):
-        self.x = x
-    def is_satisfied_by(self, candidate) -> bool:
-        return not self.x.is_satisfied_by(candidate)
-
-class X(AbstractSpecification):
-    def is_satisfied_by(self, candidate) -> bool:
-        return '42' in candidate
-
-class Y(AbstractSpecification):
-    def is_satisfied_by(self, candidate) -> bool:
-        return '38' in candidate
-z = X() | Y()
-print(z.is_satisfied_by('342'))
-
-# class IsCryptoRelated(Specification):
-#     def is_satisfied_by(self, stock: yf.Ticker) -> bool:
-#         return 'crypto' in stock.info['longBusinessSummary']
-#
-# def is_low_pe(stock_pe: float, base_pe: float) -> bool:
-#         return stock_pe <= base_pe
-#
 # def pe_yahoo(stock: yf.Ticker) -> float:
 #     try:
 #         tpe = stock.info['trailingPE']
@@ -69,11 +39,6 @@ print(z.is_satisfied_by('342'))
 #         raise MissingData(e)
 #     return tpe
 #
-# def is_positive_recommendation(stock: yf.Ticker) -> bool:
-#     df = stock.get_recommendations_summary()
-#     r = df.iloc[0]
-#     sbuy, buy, hold, sell, ssel = r['strongBuy'], r['buy'], r['hold'], r['sell'], r['strongSell']
-#     return (sbuy + buy) > (hold + sell + ssel)
 #
 # def quarter_per(stock: yf.Ticker) -> float:
 #     last_year = stock.info['trailingPE'] # trailing 12 month
@@ -101,4 +66,7 @@ print(z.is_satisfied_by('342'))
 #     eps = edgar_diluted_eps(stock.ticker)
 #     pe = current_price / eps
 #     return pe
-#
+
+if __name__ == '__main__':
+    stock = yf.Ticker('MSFT')
+    import ipdb;ipdb.set_trace()
