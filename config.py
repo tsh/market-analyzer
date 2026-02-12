@@ -1,15 +1,18 @@
 import os
 import logging
 
-logging.basicConfig(format='%(asctime)s %(levelname)-8s [%(filename)s:%(lineno)d] %(message)s',
-                    level=logging.DEBUG, encoding='utf-8')
+# logging.basicConfig(format='%(asctime)s %(levelname)-8s [%(filename)s:%(lineno)d] %(message)s',
+#                     level=logging.DEBUG, encoding='utf-8')
 
 
 PROJECT_DIR = os.path.dirname(os.path.realpath(__file__))
 
-DATABASE_DIR = os.path.join(PROJECT_DIR, 'data', 'db')
-CRAWL_PAGES_DIR = os.path.join(PROJECT_DIR, 'data', 'crawled')
-SEC_EDGAR_DATA_DIR = os.path.join(PROJECT_DIR, 'data', 'sec_edgar')
+DATA_DIR = os.path.join(PROJECT_DIR, 'data')
+DATABASE_DIR = os.path.join(DATA_DIR, 'db')
+CRAWL_PAGES_DIR = os.path.join(DATA_DIR, 'crawled')
+SEC_EDGAR_DATA_DIR = os.path.join(DATA_DIR, 'sec_edgar')
+INSTRUMENT_DATA_DIR = os.path.join(DATA_DIR, 'instruments')
+YAHOO_CACHE_TICKERS = os.path.join(DATA_DIR, 'yahoo_cache', 'tickers')
 
 LIB_DIR = os.path.join(PROJECT_DIR, 'lib')
 

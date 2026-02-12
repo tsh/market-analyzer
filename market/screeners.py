@@ -1,5 +1,9 @@
+import os
+import json
+
 import yfinance as yf
 from utils.specification import AbstractSpecification
+from config import YAHOO_CACHE_TICKERS
 
 class MissingData(KeyError):
     pass
@@ -25,48 +29,37 @@ class IsLowPE(AbstractSpecification):
     def is_satisfied_by(self, stock_pe: float):
             return stock_pe <= self.base_pe
 
-# def pe_yahoo(stock: yf.Ticker) -> float:
-#     try:
-#         tpe = stock.info['trailingPE']
-#     except KeyError as e:
-#         raise MissingData(e)
-#     return tpe
-#
-# def eps_yahoo(stock: yf.Ticker) -> float:
-#     try:
-#         tpe = stock.info['epsTrailingTwelveMonths']
-#     except KeyError as e:
-#         raise MissingData(e)
-#     return tpe
-#
-#
-# def quarter_per(stock: yf.Ticker) -> float:
-#     last_year = stock.info['trailingPE'] # trailing 12 month
-#     df = stock.history()
-#     cur_market_price = df['Close'].iloc[-1]
-#     last_quarter = '2025-09-30'
-#     diluted_eps = stock.quarterly_financials.T['Diluted EPS'].dropna()[last_quarter]
-#     pe_ratio = cur_market_price / diluted_eps  # to large comparing to trailing from yf
-#     return pe_ratio
-#
-#
-# def edgar_diluted_eps(ticker):
-#     from edgar import Company, set_identity
-#     set_identity("your.email@exa9mple.com")
-#     company = Company(ticker)
-#     latest_10k = company.get_filings(form="10-K").latest()
-#     filling_year = latest_10k.to_dict()['filing_date'].year
-#     financials = latest_10k.obj().financials
-#     df = financials.get_income_statement().to_dataframe()
-#     diluted_eps = float(df.loc['Diluted'][str(filling_year)].iloc[0])
-#     return diluted_eps
-#
-# def edgar_diluted_pe(stock: yf.Ticker):
-#     current_price = stock.history(period="1d")['Close'].iloc[-1]
-#     eps = edgar_diluted_eps(stock.ticker)
-#     pe = current_price / eps
-#     return pe
+class TickerCachedProxy:
+    CACHE_DIR = YAHOO_CACHE_TICKERS
+    CACHED_TICKERS = set(os.listdir(CACHE_DIR))
+
+    def __init__(self, ticker: str):
+        self._yf_ticker = yf.Ticker(ticker)
+
+    @property
+    def info(self):
+        if self._yf_ticker.ticker in self.CACHED_TICKERS:
+            return json.load(os.path.join(self.CACHE_DIR, self._yf_ticker.ticker))
+        else:
+            d = self._yf_ticker.info
+            with open(os.path.join(self.CACHE_DIR, self._yf_ticker.ticker) + '.json', 'w') as f:
+                json.dump(d, f)
+            return d
+
+    def trailing_pe(self) -> float:
+        try:
+            tpe = self.info['trailingPE']
+        except KeyError as e:
+            raise MissingData(e)
+        return tpe
+
+    def trailing_eps_twelve_months(self) -> float:
+        try:
+            tpe = self.info['epsTrailingTwelveMonths']
+        except KeyError as e:
+            raise MissingData(e)
+        return tpe
 
 if __name__ == '__main__':
-    stock = yf.Ticker('MSFT')
-    import ipdb;ipdb.set_trace()
+    stock = TickerCachedProxy('MSFT')
+    print(stock.trailing_pe())
